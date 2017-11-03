@@ -25,8 +25,8 @@ class ArticleController extends Controller
         $pagination->pageSize = $pageSize;
         $pagination->totalCount = $total;
         //查询数据
-        $article = $condition->limit($pageSize)->offset($pagination->offset)->all();
-        return $this->render('list',['article'=>$article,'pagination'=>$pagination]);
+        $articles = $condition->limit($pageSize)->offset($pagination->offset)->all();
+        return $this->render('list',['articles'=>$articles,'pagination'=>$pagination]);
     }
     public function actionAdd(){
         $article = new Article();
