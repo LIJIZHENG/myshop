@@ -14,6 +14,7 @@ use backend\models\ArticleDetail;
 use yii\data\Pagination;
 use yii\web\Controller;
 
+
 class ArticleController extends Controller
 {
     public function actionList(){
@@ -34,15 +35,17 @@ class ArticleController extends Controller
         $request = \Yii::$app->request;
         if ($request->isPost){
             $article->load($request->post());
-            $content->load($request->post('content'));
-            if ($article->validate()){
+            $content->load($request->post());
+            if ($article->validate() && $content->validate()){
                 $article->create_time = time();
                 $article->save();
                 $content->save();
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['article/list']);
             }else{
-                var_dump($article->getErrors());die;
+                var_dump($article->getErrors());
+                var_dump($content->getErrors());
+                die;
             }
         }
         return $this->render('add',['article'=>$article,'content'=>$content]);
@@ -53,17 +56,19 @@ class ArticleController extends Controller
         $request = \Yii::$app->request;
         if ($request->isPost){
             $article->load($request->post());
-            $content->load($request->post('content'));
-            if ($article->validate()){
+            $content->load($request->post());
+            if ($article->validate() && $content->validate()){
                 $article->save();
                 $content->save();
                 \Yii::$app->session->setFlash('success','修改成功');
                 return $this->redirect(['article/list']);
             }else{
-                var_dump($article->getErrors());die;
+                var_dump($article->getErrors());
+                var_dump($content->getErrors());
+                die;
             }
         }
-        return $this->render('add',['article'=>$article,'content'=>$content]);
+        return $this->render('edit',['article'=>$article,'content'=>$content]);
     }
     public function actionDelete(){
         $request = \Yii::$app->request;
@@ -74,5 +79,12 @@ class ArticleController extends Controller
         }else{
             return -1;
         }
+    }
+    public function actionDetail(){
+        $request = \Yii::$app->request;
+        $id = $request->get('id');
+        $base = Article::findOne(['id'=>$id]);
+        $detail = ArticleDetail::findOne(['article_id'=>$id]);
+        return $this->render('detail',['base'=>$base,'detail'=>$detail]);
     }
 }

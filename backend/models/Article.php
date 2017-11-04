@@ -30,4 +30,9 @@ class Article extends ActiveRecord
             ['intro','safe']
         ];
     }
+    //和文章分类是多对一的关系
+    public function getArticleCategory(){
+        return $this->hasOne(ArticleCategory::className(),['id'=>'article_category_id']);
+    }
+
 }

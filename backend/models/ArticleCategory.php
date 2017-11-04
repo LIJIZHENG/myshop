@@ -10,6 +10,7 @@ namespace backend\models;
 
 
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class ArticleCategory extends ActiveRecord
 {
@@ -28,5 +29,14 @@ class ArticleCategory extends ActiveRecord
             [['name','sort','status'],'required'],
             ['intro','safe']
         ];
+    }
+    //处理下拉列表所需数据
+    public static function getCategories(){
+
+        return ArrayHelper::map(self::find()->where(['<>','status',-1])->all(),'id','name');
+    }
+    //和文章的关系是一对多
+    public function getArticles(){
+        return $this->hasMany(Article::className(),['article_category_id'=>'id']);
     }
 }

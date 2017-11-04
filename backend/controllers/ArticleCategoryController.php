@@ -9,6 +9,7 @@
 namespace backend\controllers;
 
 
+use backend\models\Article;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 use yii\web\Controller;
@@ -60,11 +61,17 @@ class ArticleCategoryController extends Controller
     public function actionDelete(){
         $request = \Yii::$app->request;
         $id = $request->post('id');
-        $aCategory = ArticleCategory::updateAll(['status'=>-1],['id'=>$id]);
-        if ($aCategory){
-            return 1;
+        $aCategory = ArticleCategory::findOne(['id'=>$id]);
+        $articles = $aCategory->articles;
+        if ($articles == []){
+            $result = ArticleCategory::updateAll(['status'=>-1],['id'=>$id]);
+            if ($result){
+                return 1;
+            }else{
+                return -1;
+            }
         }else{
-            return -1;
+            return 0;
         }
     }
 }
