@@ -11,6 +11,9 @@ namespace backend\models;
 
 use yii\db\ActiveRecord;
 use creocoder\nestedsets\NestedSetsBehavior;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
+
 class GoodsCategory extends ActiveRecord
 {
     public function attributeLabels()
@@ -51,5 +54,16 @@ class GoodsCategory extends ActiveRecord
     public static function find()
     {
         return new GoodsCategoryQuery(get_called_class());
+    }
+    //获取zTree需要的json数据
+    public static function getNodes(){
+        $nodes = self::find()->select(['id','name','parent_id'])->all();
+        $nodes = ArrayHelper::merge([['id'=>0,'name'=>'顶级分类','parent_id'=>0]],$nodes);
+        return Json::encode($nodes);
+    }
+    //获取上级分类名称
+    public static function getParentName($parent_id){
+        $parent = self::findOne(['id'=>$parent_id]);
+        return empty($parent['name'])?'顶级分类':$parent['name'];
     }
 }

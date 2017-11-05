@@ -34,8 +34,45 @@ class GoodsCategoryController extends Controller
                     \Yii::$app->session->setFlash('添加子分类成功');
                 }
                 return $this->redirect(['list']);
+            }else{
+                var_dump($gCategories->getErrors());die;
             }
         }
         return $this->render('add',['gCategories'=>$gCategories]);
+    }
+    public function actionEdit($id){
+        $gCategory = GoodsCategory::findOne(['id'=>$id]);
+        $request = \Yii::$app->request;
+        if ($request->isPost){
+            $gCategory->load($request->post());
+            if ($gCategory->validate()){
+                if ($gCategory->parent_id == 0){
+                    $gCategory->makeRoot();
+                    \Yii::$app->session->setFlash('修改顶级分类成功');
+                }else{
+                    $parentNode = GoodsCategory::findOne(['id'=>$gCategory->parent_id]);
+                    $gCategory->prependTo($parentNode);
+                    \Yii::$app->session->setFlash('修改子分类成功');
+                }
+                return $this->redirect(['list']);
+            }else{
+                var_dump($gCategory->getErrors());
+            }
+        }
+        return $this->render('edit',['gCategory'=>$gCategory]);
+    }
+    public function actionDelete(){
+        $request = \Yii::$app->request;
+        if ($request->isPost){
+            $id = $request->post('id');
+            $num = GoodsCategory::find(['parent_id'=>$id])->count();
+            if ($num){
+                return 0;
+            }elseif ($num == 0){
+                return 1;
+            }else{
+                return -1;
+            }
+        }
     }
 }
