@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `article_category`.
  */
-class m171103_083852_create_article_category_table extends Migration
+class m171105_005925_create_article_category_table extends Migration
 {
     /**
      * @inheritdoc
@@ -17,7 +17,7 @@ class m171103_083852_create_article_category_table extends Migration
             'name'=>$this->string(50)->notNull()->comment('文章分类'),
             'intro'=>$this->text()->comment('简介'),
             'sort'=>$this->integer(11)->notNull()->comment('排序'),
-            'status'=>$this->smallInteger(2)->unsigned()->notNull()->comment('状态')
+            'status'=>$this->smallInteger(2)->notNull()->comment('状态')
         ]);
     }
 

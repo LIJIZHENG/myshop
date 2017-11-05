@@ -28,16 +28,17 @@
 $this->registerJs(
         <<<JS
 $('.del').click(function() {
-    confirm('是否要删除?');
-    var id = $(this).attr('data-id');
-    var that = this;
-    $.post('delete',{"id":id},function(data) {
-        if (data == 1){
-            $(that).closest('tr').remove();
-        }else{
-            alert('删除失败');
-        }
-  })
+    if (confirm('是否要删除?')){
+        var id = $(this).attr('data-id');
+        var that = this;
+        $.post('delete',{"id":id},function(data) {
+            if (data == 1){
+                $(that).closest('tr').remove();
+            }else{
+                alert('删除失败');
+            }
+      })
+    }
 })
 JS
 );

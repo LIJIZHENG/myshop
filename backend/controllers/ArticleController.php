@@ -35,7 +35,7 @@ class ArticleController extends Controller
         if ($request->isPost){
             $article->load($request->post());
             $content->load($request->post('content'));
-            if ($article->validate()){
+            if ($article->validate() && $content->validate()){
                 $article->create_time = time();
                 $article->save();
                 $content->save();
@@ -54,7 +54,7 @@ class ArticleController extends Controller
         if ($request->isPost){
             $article->load($request->post());
             $content->load($request->post('content'));
-            if ($article->validate()){
+            if ($article->validate() && $content->validate()){
                 $article->save();
                 $content->save();
                 \Yii::$app->session->setFlash('success','修改成功');

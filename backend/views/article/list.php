@@ -1,5 +1,5 @@
 <div class="container">
-    <a href="<?=\yii\helpers\Url::to(['article-category/add'])?>" class="btn btn-success">新增</a>
+    <a href="<?=\yii\helpers\Url::to(['article/add'])?>" class="btn btn-success">新增</a>
     <table class="table table-bordered">
         <tr>
             <th>文章标题</th>
@@ -32,16 +32,17 @@
 $this->registerJs(
         <<<JS
 $('.del').click(function() {
-    confirm('是否要删除?');
-    var id = $(this).attr('data-id');
-    var that = this;
-    $.post('delete',{"id":id},function(data) {
-        if (data == 1){
-            $(that).closest('tr').remove();
-        }else{
-            alert('删除失败');
-        }
-  })
+    if (confirm('是否要删除?')){
+        var id = $(this).attr('data-id');
+        var that = this;
+        $.post('delete',{"id":id},function(data) {
+            if (data == 1){
+                $(that).closest('tr').remove();
+            }else{
+                alert('删除失败');
+            }
+      })
+    } 
 })
 JS
 );

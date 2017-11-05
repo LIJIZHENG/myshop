@@ -10,13 +10,12 @@ use yii\db\ActiveRecord;
  */
 class Brand extends ActiveRecord
 {
-    public $imgFile;
     public function attributeLabels()
     {
         return [
             'name'=>'名称',
             'intro'=>'简介',
-            'imgFile'=>'品牌logo',
+            'logo'=>'品牌logo',
             'sort'=>'排序',
             'status'=>'状态'
         ];
@@ -24,8 +23,8 @@ class Brand extends ActiveRecord
     public function rules()
     {
         return [
-            [['name','intro','sort','status'],'required'],
-            ['imgFile','file','extensions'=>['jpg','jpeg','png','gif']],
+            [['name','intro','sort','status','logo'],'required'],
+//            ['logo','file','extensions'=>['jpg','jpeg','png','gif']],
         ];
     }
 }
