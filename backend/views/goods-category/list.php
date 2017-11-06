@@ -11,7 +11,7 @@
         <?php foreach($gCategories as $gCategory):?>
             <tr>
                 <td><?=$gCategory->id?></td>
-                <td><?=$gCategory->name?></td>
+                <td><?php echo str_repeat('-',($gCategory->depth)*3);echo $gCategory->name?></td>
                 <td><?=\backend\models\GoodsCategory::getParentName($gCategory->parent_id)?></td>
                 <td><?=$gCategory->intro?></td>
                 <td>
@@ -36,12 +36,10 @@ $this->registerJs(
             if (data == 1){
                 $(that).closest('tr').remove();
                 alert('删除成功');
-            }else if (data == 0){
-                alert('该分类下还有子分类,不能删除');
-            }else{
-                alert('删除失败');
-            }
-          })
+             }else{
+                 alert('该分类下还有子分类,不能删除');
+             }
+          });
       }
     })
 JS

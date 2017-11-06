@@ -15,7 +15,7 @@ use yii\web\Controller;
 class GoodsCategoryController extends Controller
 {
     public function actionList(){
-        $gCategories = GoodsCategory::find()->all();
+        $gCategories = GoodsCategory::find()->orderBy(['tree'=>'ASC','lft'=>'ASC'])->all();
         return $this->render('list',['gCategories'=>$gCategories]);
     }
     public function actionAdd(){
@@ -47,7 +47,11 @@ class GoodsCategoryController extends Controller
             $gCategory->load($request->post());
             if ($gCategory->validate()){
                 if ($gCategory->parent_id == 0){
-                    $gCategory->makeRoot();
+                    if ($gCategory->getOldAttribute('parent_id') == 0){
+                        $gCategory->save();
+                    }else{
+                        $gCategory->makeRoot();
+                    }
                     \Yii::$app->session->setFlash('修改顶级分类成功');
                 }else{
                     $parentNode = GoodsCategory::findOne(['id'=>$gCategory->parent_id]);
@@ -65,10 +69,13 @@ class GoodsCategoryController extends Controller
         $request = \Yii::$app->request;
         if ($request->isPost){
             $id = $request->post('id');
-            $num = GoodsCategory::find(['parent_id'=>$id])->count();
-            if ($num){
-                return 0;
-            }elseif ($num == 0){
+            $model = GoodsCategory::findOne(['id'=>$id]);
+            if ($model->isLeaf()){
+                if ($model->parent_id != 0){
+                    $model->delete();
+                }else{
+                    $model->deleteWithChildren();
+                }
                 return 1;
             }else{
                 return -1;

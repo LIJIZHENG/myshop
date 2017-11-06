@@ -9,10 +9,7 @@
             <th>市场价格</th>
             <th>商品价格</th>
             <th>库存</th>
-            <th>是否在售</th>
-            <th>状态</th>
             <th>添加时间</th>
-            <th>浏览次数</th>
             <th>操作</th>
         </tr>
         <?php foreach ($goods as $v):?>
@@ -25,17 +22,35 @@
                 <td><?=$v->market_price?></td>
                 <td><?=$v->shop_price?></td>
                 <td><?=$v->stock?></td>
-                <td><?=$v->is_on_sale?></td>
-                <td><?=$v->status?></td>
                 <td><?=$v->create_time?></td>
-                <td><?=$v->view_times?></td>
                 <td>
-                    <a href="<?=\yii\helpers\Url::to(['goods-gallery','id'=>$v->id])?>">相册</a>
-                    <a href="<?=\yii\helpers\Url::to(['goods-intro','id'=>$v->id])?>">查看</a>
-                    <a href="<?=\yii\helpers\Url::to(['edit','id'=>$v->id])?>">编辑</a>
-                    <a href="<?=\yii\helpers\Url::to(['delete','id'=>$v->id])?>">删除</a>
+                    <a href="<?=\yii\helpers\Url::to(['goods-gallery/list','id'=>$v->id])?>" class="btn btn-default">相册</a>
+                    <a href="<?=\yii\helpers\Url::to(['goods-intro','id'=>$v->id])?>" class="btn btn-info">查看</a>
+                    <a href="<?=\yii\helpers\Url::to(['edit','id'=>$v->id])?>" class="btn btn-warning">编辑</a>
+                    <a href="javascript:;" data-id="<?=$v->id?>" class="btn btn-danger del">删除</a>
                 </td>
             </tr>
         <?php endforeach;?>
     </table>
 </div>
+<?php
+/**
+ * @var $this \yii\web\View
+ */
+$this->registerJs(
+        <<<JS
+    $('.del').click(function() {
+      var id = $(this).attr('data-id');
+      var that = this;
+      $.post('delete',{'id':id},function(data) {
+        if (data == 1){
+            $(that).closest('tr').remove();
+            alert('删除成功');
+        }else{
+            alert('删除失败');
+        }
+      })
+    })
+JS
+
+);

@@ -1,6 +1,7 @@
 <?php
 namespace backend\models;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * Created by PhpStorm.
@@ -26,5 +27,9 @@ class Brand extends ActiveRecord
             [['name','intro','sort','status','logo'],'required'],
 //            ['logo','file','extensions'=>['jpg','jpeg','png','gif']],
         ];
+    }
+    public static function getBrands(){
+        $brands = self::find()->select(['id','name'])->all();
+        return ArrayHelper::map($brands,'id','name');
     }
 }

@@ -1,14 +1,16 @@
 <?php
+$form = \yii\bootstrap\ActiveForm::begin();
+$form->field($goodsGallery,'path')->hiddenInput();
 //引入css和js
 /**
-* @var $this \yii\web\View
-*/
+ * @var $this \yii\web\View
+ */
 $this->registerCssFile('@web'.'/webuploader/webuploader.css');
 $this->registerJsFile('@web'.'/webuploader/webuploader.js',['depends'=>\yii\web\JqueryAsset::className()]);
 $url = \yii\helpers\Url::to(['brand/upload']);
 $qiurl = "http://oywgoal5u.bkt.clouddn.com/";
 $this->registerJs(
-<<<JS
+    <<<JS
 // 初始化Web Uploader
 var uploader = WebUploader.create({
 
@@ -38,7 +40,7 @@ uploader.on( 'uploadSuccess', function( file,response) {
 //回显图片
 $('#upImage').attr('src',"{$qiurl}"+response.url);
 //添加到表单
-$('#brand-logo').val(response.url);
+$('#goods-logo').val(response.url);
 //取消修改时的图片回显
 if ($('#getImage').length>0){
     $('#getImage').attr('src','');
@@ -53,3 +55,5 @@ JS
     <div id="filePicker">选择图片</div>
 </div>
 <div><img id="upImage" width="200px"></div>
+<?php
+\yii\bootstrap\ActiveForm::end();

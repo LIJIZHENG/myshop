@@ -59,6 +59,8 @@ JS
 </div>
 <div><img id="upImage" width="200px"></div>
 <?php
+echo '<img id="getImage" src="http://oywgoal5u.bkt.clouddn.com/'.$goods->logo.'" width="200px">';
+
 //商品分类
 echo $form->field($goods,'goods_category_id')->hiddenInput();
 echo '<ul id="treeDemo" class="ztree"></ul>';
@@ -67,6 +69,7 @@ echo '<ul id="treeDemo" class="ztree"></ul>';
 $this->registerCssFile('@web/zTree/css/zTreeStyle/zTreeStyle.css');
 $this->registerJsFile('@web/zTree/js/jquery.ztree.core.js',['depends'=>\yii\web\JqueryAsset::className()]);
 $nodes = \backend\models\GoodsCategory::getNodes();
+$goods_category_id = $goods->goods_category_id;
 $this->registerJs(
     <<<JS
         var zTreeObj;
@@ -90,6 +93,8 @@ $this->registerJs(
         var zNodes ={$nodes};
             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             zTreeObj.expandAll(true);
+            var node = zTreeObj.getNodesByParam('id',{$goods_category_id});
+            zTreeObj.selectNode(node[0]);
 JS
 );
 echo $form->field($goods,'brand_id')->dropDownList(\backend\models\Brand::getBrands());
