@@ -2,22 +2,22 @@
     <form class="form-inline" action="<?=\yii\helpers\Url::to(['list'])?>" method="get">
         <div class="col-lg-2">
         <div class="form-group">
-            <input type="text" class="form-control" id="name" name="name" placeholder="商品名称">
+            <input type="text" class="form-control" id="name" name="name" placeholder="商品名称" value="<?=$search['name']?>">
         </div>
         </div>
         <div class="col-lg-2">
         <div class="form-group">
-            <input type="text" class="form-control" id="sn" name="sn" placeholder="货号">
+            <input type="text" class="form-control" id="sn" name="sn" placeholder="货号" value="<?=$search['sn']?>">
         </div>
         </div>
         <div class="col-lg-2">
         <div class="form-group">
-            <input type="text" class="form-control"  name="lowPrice" placeholder="最低价格">
+            <input type="text" class="form-control" id="lowPrice"  name="lowPrice" placeholder="最低价格" value="<?=$search['lowPrice']?>">
         </div>
         </div>
         <div class="col-lg-3">
             <div class="input-group">
-                <input type="text" class="form-control" name="highPrice" placeholder="最高价格">
+                <input type="text" class="form-control" id="highPrice" name="highPrice" placeholder="最高价格" value="<?=$search['highPrice']?>">
                 <span class="input-group-btn">
         <button type="submit" class="btn btn-default" id="search" type="button"><span class="glyphicon glyphicon-search"></span></button>
       </span>
@@ -44,12 +44,12 @@
                 <td><?=$v->name?></td>
                 <td><?=$v->sn?></td>
                 <td><img src="<?=$v->logo?>" width="200px"></td>
-                <td><?=$v->goods_category_id?></td>
-                <td><?=$v->brand_id?></td>
+                <td><?=$v->goodsCategory->name?></td>
+                <td><?=$v->brand->name?></td>
                 <td><?=$v->market_price?></td>
                 <td><?=$v->shop_price?></td>
                 <td><?=$v->stock?></td>
-                <td><?=$v->create_time?></td>
+                <td><?=date('Y-m-d H:i:s',$v->create_time)?></td>
                 <td>
                     <a href="<?=\yii\helpers\Url::to(['goods-gallery/list','id'=>$v->id])?>" class="btn btn-default">相册</a>
                     <a href="<?=\yii\helpers\Url::to(['goods-intro','id'=>$v->id])?>" class="btn btn-info">查看</a>
@@ -79,7 +79,7 @@ $this->registerJs(
             alert('删除失败');
         }
       })
-    });
+    }); 
 JS
 
 );

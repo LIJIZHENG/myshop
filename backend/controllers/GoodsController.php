@@ -25,16 +25,24 @@ class GoodsController extends Controller
         $pagination = new Pagination();
         $pagination->pageSize = 2;
         $pagination->totalCount = $query->count();
-        if (isset($search['name']) && empty($search['highPrice'])) {
-            $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
-                ->andWhere([">=", "market_price", "{$search['lowPrice']}"]);
-        }elseif (!empty($search['highPrice'])){
-            $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
-                ->andWhere([">=", "market_price", "{$search['lowPrice']}"])->andWhere(["<=", "market_price", "{$search['highPrice']}"]);
-        }
+        if (isset($search['name'])){
+            if (empty($search['highPrice'])) {
+                $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
+                    ->andWhere([">=", "market_price", "{$search['lowPrice']}"]);
+            }elseif (!empty($search['highPrice'])){
+                $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
+                    ->andWhere([">=", "market_price", "{$search['lowPrice']}"])->andWhere(["<=", "market_price", "{$search['highPrice']}"]);
+            }
 
+            $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
+            return $this->render('list',['goods'=>$goods,'pagination'=>$pagination,'search'=>$search]);
+        }
+        $search['name']='';
+        $search['sn']='';
+        $search['lowPrice']='';
+        $search['highPrice']='';
         $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
-        return $this->render('list',['goods'=>$goods,'pagination'=>$pagination]);
+        return $this->render('list',['goods'=>$goods,'pagination'=>$pagination,'search'=>$search]);
     }
     public function actionAdd(){
         $goods = new Goods();

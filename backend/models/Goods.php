@@ -34,4 +34,12 @@ class Goods extends ActiveRecord
             [['name','sn','logo','goods_category_id','brand_id','market_price','shop_price','stock','is_on_sale','sort'],'required']
         ];
     }
+    //和商品分类是多对一的关系
+    public function getGoodsCategory(){
+        return $this->hasOne(GoodsCategory::className(),['id'=>'goods_category_id']);
+    }
+    //和品牌的关系是多对一的关系
+    public function getBrand(){
+        return $this->hasOne(Brand::className(),['id'=>'brand_id']);
+    }
 }
