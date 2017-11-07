@@ -1,4 +1,31 @@
 <div class="container">
+    <form class="form-inline" action="<?=\yii\helpers\Url::to(['list'])?>" method="get">
+        <div class="col-lg-2">
+        <div class="form-group">
+            <input type="text" class="form-control" id="name" name="name" placeholder="商品名称">
+        </div>
+        </div>
+        <div class="col-lg-2">
+        <div class="form-group">
+            <input type="text" class="form-control" id="sn" name="sn" placeholder="货号">
+        </div>
+        </div>
+        <div class="col-lg-2">
+        <div class="form-group">
+            <input type="text" class="form-control"  name="lowPrice" placeholder="最低价格">
+        </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="highPrice" placeholder="最高价格">
+                <span class="input-group-btn">
+        <button type="submit" class="btn btn-default" id="search" type="button"><span class="glyphicon glyphicon-search"></span></button>
+      </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+    </form>
+    <a href="<?=\yii\helpers\Url::to(['add'])?>" class="btn btn-success">新增</a>
     <table class="table table-bordered">
         <tr>
             <th>商品名称</th>
@@ -32,8 +59,10 @@
             </tr>
         <?php endforeach;?>
     </table>
+<?php echo \yii\widgets\LinkPager::widget(['pagination'=>$pagination]);?>
 </div>
 <?php
+
 /**
  * @var $this \yii\web\View
  */
@@ -50,7 +79,7 @@ $this->registerJs(
             alert('删除失败');
         }
       })
-    })
+    });
 JS
 
 );

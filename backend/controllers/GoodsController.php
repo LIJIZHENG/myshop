@@ -11,15 +11,30 @@ namespace backend\controllers;
 
 use backend\models\Goods;
 use backend\models\GoodsDayCount;
-use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
+use yii\data\Pagination;
 use yii\web\Controller;
 
 class GoodsController extends Controller
 {
+    public $enableCsrfValidation = false;
     public function actionList(){
-        $goods = Goods::find()->all();
-        return $this->render('list',['goods'=>$goods]);
+        $request = \Yii::$app->request;
+        $search = $request->get();
+        $query = Goods::find();
+        $pagination = new Pagination();
+        $pagination->pageSize = 2;
+        $pagination->totalCount = $query->count();
+        if (isset($search['name']) && empty($search['highPrice'])) {
+            $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
+                ->andWhere([">=", "market_price", "{$search['lowPrice']}"]);
+        }elseif (!empty($search['highPrice'])){
+            $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
+                ->andWhere([">=", "market_price", "{$search['lowPrice']}"])->andWhere(["<=", "market_price", "{$search['highPrice']}"]);
+        }
+
+        $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
+        return $this->render('list',['goods'=>$goods,'pagination'=>$pagination]);
     }
     public function actionAdd(){
         $goods = new Goods();
