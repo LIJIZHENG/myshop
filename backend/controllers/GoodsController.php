@@ -22,6 +22,8 @@ class GoodsController extends Controller
         $request = \Yii::$app->request;
         $search = $request->get();
         $query = Goods::find();
+        $pagination = new Pagination();
+        $pagination->pageSize = 2;
         if (isset($search['name'])){
             if (empty($search['highPrice'])) {
                 $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
@@ -30,12 +32,12 @@ class GoodsController extends Controller
                 $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
                     ->andWhere([">=", "market_price", "{$search['lowPrice']}"])->andWhere(["<=", "market_price", "{$search['highPrice']}"]);
             }
-            $pagination = new Pagination();
-            $pagination->pageSize = 2;
+
             $pagination->totalCount = $query->count();
             $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
             return $this->render('list',['goods'=>$goods,'pagination'=>$pagination,'search'=>$search]);
         }
+        $pagination->totalCount = $query->count();
         $search['name']='';
         $search['sn']='';
         $search['lowPrice']='';

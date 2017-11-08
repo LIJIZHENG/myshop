@@ -47,7 +47,6 @@ class UserController extends Controller
         if ($request->isPost){
             $user->load($request->post());
             if ($user->validate()){
-                $user->password_hash = \Yii::$app->security->generatePasswordHash($user->password);
                 $user->updated_at = time();
                 $user->save();
                 \Yii::$app->session->setFlash('success','添加成功');
@@ -56,6 +55,7 @@ class UserController extends Controller
                 var_dump($user->getErrors());die;
             }
         }
+        $user->password = $user->password_hash;
         return $this->render('edit',['user'=>$user]);
     }
     public function actionDelete($id){
