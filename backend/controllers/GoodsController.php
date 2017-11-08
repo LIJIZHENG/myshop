@@ -22,9 +22,6 @@ class GoodsController extends Controller
         $request = \Yii::$app->request;
         $search = $request->get();
         $query = Goods::find();
-        $pagination = new Pagination();
-        $pagination->pageSize = 2;
-        $pagination->totalCount = $query->count();
         if (isset($search['name'])){
             if (empty($search['highPrice'])) {
                 $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
@@ -33,7 +30,9 @@ class GoodsController extends Controller
                 $query = $query->where(["like", "name", "{$search['name']}"])->andWhere(["like", "sn", "{$search['sn']}"])
                     ->andWhere([">=", "market_price", "{$search['lowPrice']}"])->andWhere(["<=", "market_price", "{$search['highPrice']}"]);
             }
-
+            $pagination = new Pagination();
+            $pagination->pageSize = 2;
+            $pagination->totalCount = $query->count();
             $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
             return $this->render('list',['goods'=>$goods,'pagination'=>$pagination,'search'=>$search]);
         }
@@ -47,30 +46,27 @@ class GoodsController extends Controller
     public function actionAdd(){
         $goods = new Goods();
         $goodsIntro = new GoodsIntro();
-        //生成sn
-        $date = date('Y-m-d');
-        $date1 = date('Ymd');
-        $goodsDayCount = new GoodsDayCount();
-        $goodsCount = $goodsDayCount->findOne(['day'=>$date]);
-        if ($goodsCount){
-            $count = $goodsCount->count;
-            $newCount = sprintf('%05s',$count+1);
-            $goods->sn = $date1.$newCount;
-            $count += 1;
-//            $goodsDayCount->day = $date;
-            $result =1;
-        }else{
-            $goods->sn = $date1.'00001';
-            $count = 1;
-//            $goodsDayCount->count = 1;
-//            $goodsDayCount->day = $date;
-            $result =0;
-        }
         $request = \Yii::$app->request;
         if ($request->isPost){
             $goods->load($request->post());
             $goodsIntro->load($request->post());
             if ($goods->validate() && $goodsIntro->validate()){
+                //生成sn
+                $date = date('Y-m-d');
+                $date1 = date('Ymd');
+                $goodsDayCount = new GoodsDayCount();
+                $goodsCount = $goodsDayCount->findOne(['day'=>$date]);
+                if ($goodsCount){
+                    $count = $goodsCount->count;
+                    $newCount = sprintf('%05s',$count+1);
+                    $goods->sn = $date1.$newCount;
+                    $count += 1;
+                    $result = 1;
+                }else{
+                    $goods->sn = $date1.'00001';
+                    $count = 1;
+                    $result = 0;
+                }
                 $goods->create_time = time();
                 $goods->status = 1;
                 $goods->save();
@@ -86,7 +82,6 @@ class GoodsController extends Controller
             }else{
                 var_dump($goods->getErrors());
                 var_dump($goodsIntro->getErrors());
-                var_dump($goodsDayCount->getErrors());
                 die;
             }
         }

@@ -13,13 +13,12 @@ use yii\db\ActiveRecord;
 
 class User extends ActiveRecord
 {
-    public $rePassword;
+    public $password;
     public function attributeLabels()
     {
         return [
             'username'=>'用户名',
             'password'=>'密码',
-            'rePassword'=>'确认密码',
             'email'=>'邮箱',
             'status'=>'状态',
         ];
@@ -27,8 +26,7 @@ class User extends ActiveRecord
     public function rules()
     {
         return [
-            [['username','password','rePassword','email','status'],'required'],
-            ['password','compare','compareAttribute'=>'rePassword','operator'=>'=='],
+            [['username','password','email','status'],'required'],
             ['email','email'],
         ];
     }

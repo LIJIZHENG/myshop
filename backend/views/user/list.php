@@ -1,4 +1,5 @@
 <div class="container">
+    <a href="<?=\yii\helpers\Url::to(['add'])?>" class="btn btn-success">新增</a>
     <table class="table table-bordered">
         <tr>
             <th>ID</th>

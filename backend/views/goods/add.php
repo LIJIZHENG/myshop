@@ -1,7 +1,6 @@
 <?php
 $form = \yii\bootstrap\ActiveForm::begin();
 echo $form->field($goods,'name')->textInput();
-echo $form->field($goods,'sn')->textInput();
 //LOGO图片
 echo $form->field($goods,'logo')->hiddenInput();
 //引入css和js

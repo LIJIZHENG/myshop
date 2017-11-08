@@ -31,7 +31,7 @@ class UserController extends Controller
             if ($user->validate()){
                 $user->password_hash = \Yii::$app->security->generatePasswordHash($user->password);
                 $user->auth_key = \Yii::$app->security->generateRandomString();
-                $user->create_at = time();
+                $user->created_at = time();
                 $user->save();
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['list']);
@@ -48,7 +48,7 @@ class UserController extends Controller
             $user->load($request->post());
             if ($user->validate()){
                 $user->password_hash = \Yii::$app->security->generatePasswordHash($user->password);
-                $user->update_at = time();
+                $user->updated_at = time();
                 $user->save();
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['list']);
