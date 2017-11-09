@@ -42,7 +42,6 @@ $this->registerJs(
             }
           })
         }
-      
     })
 JS
 );

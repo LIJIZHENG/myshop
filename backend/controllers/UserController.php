@@ -16,7 +16,7 @@ use yii\web\Controller;
 class UserController extends Controller
 {
     public function actionList(){
-        $query = User::find();
+        $query = User::find()->where(['status'=>1]);
         $pagination = new Pagination();
         $pagination->pageSize = 2;
         $pagination->totalCount = $query->count();
@@ -25,6 +25,7 @@ class UserController extends Controller
     }
     public function actionAdd(){
         $user = new User();
+
         $request = \Yii::$app->request;
         if ($request->isPost){
             $user->load($request->post());
@@ -33,6 +34,12 @@ class UserController extends Controller
                 $user->auth_key = \Yii::$app->security->generateRandomString();
                 $user->created_at = time();
                 $user->save();
+                $auth = \Yii::$app->authManager;
+                foreach ($user->roles as $roleName){
+                    $role = $auth->getRole($roleName);
+                    $auth->assign($role,$user->getOldAttribute('id'));
+                }
+
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['list']);
             }else{
@@ -43,13 +50,21 @@ class UserController extends Controller
     }
     public function actionEdit($id){
         $user = User::findOne(['id'=>$id]);
+        $auth = \Yii::$app->authManager;
+        $roles = $auth->getAssignments($id);
+        $user->roles = array_keys($roles);
         $request = \Yii::$app->request;
         if ($request->isPost){
             $user->load($request->post());
             if ($user->validate()){
                 $user->updated_at = time();
                 $user->save();
-                \Yii::$app->session->setFlash('success','添加成功');
+                $auth->revokeAll($id);
+                foreach ($user->roles as $roleName){
+                    $role = $auth->getRole($roleName);
+                    $auth->assign($role,$user->getOldAttribute('id'));
+                }
+                \Yii::$app->session->setFlash('success','修改成功');
                 return $this->redirect(['list']);
             }else{
                 var_dump($user->getErrors());die;
@@ -58,7 +73,9 @@ class UserController extends Controller
         $user->password = $user->password_hash;
         return $this->render('edit',['user'=>$user]);
     }
-    public function actionDelete($id){
+    public function actionDelete(){
+        $requset = \Yii::$app->request;
+        $id = $requset->post('id');
         $result = User::updateAll(['status'=>0],['id'=>$id]);
         if ($result){
             return 1;

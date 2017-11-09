@@ -42,14 +42,7 @@ class UserForm extends Model
                 $user->last_login_ip = ip2long(\Yii::$app->request->getUserIP());
                 $user->last_login_time = time();
                 $user->save(0);
-                if ($remember){
-                    \Yii::$app->user->login($user,7*24*3600);
-                }else{
-                    \Yii::$app->user->login($user);
-
-                }
-
-
+                    \Yii::$app->user->login($user,$this->rememberMe?7*24*3600:0);
                 return true;
             }else{
                 $this->addError('password','密码输入错误');

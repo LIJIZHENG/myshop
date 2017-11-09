@@ -10,11 +10,13 @@ namespace backend\models;
 
 
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
 {
     public $password;
+    public $roles;
     public function attributeLabels()
     {
         return [
@@ -22,14 +24,20 @@ class User extends ActiveRecord implements IdentityInterface
             'password'=>'密码',
             'email'=>'邮箱',
             'status'=>'状态',
+            'roles'=>'角色'
         ];
     }
     public function rules()
     {
         return [
-            [['username','password','email','status'],'required'],
+            [['username','password','email','status','roles'],'required'],
+            [['username','email'],'unique'],
             ['email','email'],
         ];
+    }
+    public static function getRoles(){
+        $roles = \Yii::$app->authManager->getRoles();
+        return ArrayHelper::map($roles,'name','description');
     }
 
     /**
