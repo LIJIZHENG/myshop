@@ -17,7 +17,6 @@ class Goods extends ActiveRecord
     {
         return [
             'name'=>'商品名称',
-            'sn'=>'货号',
             'logo'=>'LOGO图片',
             'goods_category_id'=>'商品分类',
             'brand_id'=>'品牌分类',
@@ -31,7 +30,8 @@ class Goods extends ActiveRecord
     public function rules()
     {
         return [
-            [['name','sn','logo','goods_category_id','brand_id','market_price','shop_price','stock','is_on_sale','sort'],'required']
+            [['name','logo','goods_category_id','brand_id','market_price','shop_price','stock','is_on_sale','sort'],'required'],
+            ['sn','safe']
         ];
     }
     //和商品分类是多对一的关系

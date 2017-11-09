@@ -63,22 +63,19 @@ class GoodsController extends Controller
                     $newCount = sprintf('%05s',$count+1);
                     $goods->sn = $date1.$newCount;
                     $count += 1;
-                    $result = 1;
+                    $goodsCount->count = $count+1;
+                    $goodsCount->save();
                 }else{
                     $goods->sn = $date1.'00001';
                     $count = 1;
-                    $result = 0;
+                    $goodsDayCount->day = $date;
+                    $goodsDayCount->count =$count;
+                    $goodsDayCount->save();
                 }
                 $goods->create_time = time();
                 $goods->status = 1;
                 $goods->save();
                 $goodsIntro->save();
-                if ($result ==1){
-                    $goodsDayCount->updateAll(['count'=>$count],['day'=>$date]);
-                }else{
-                    $goodsDayCount->save();
-                }
-
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['list']);
             }else{
