@@ -50,6 +50,7 @@ class UserController extends Controller
     }
     public function actionEdit($id){
         $user = User::findOne(['id'=>$id]);
+        $user->password = $user->password_hash;
         $auth = \Yii::$app->authManager;
         $roles = $auth->getAssignments($id);
         $user->roles = array_keys($roles);
@@ -71,7 +72,7 @@ class UserController extends Controller
             }
         }
         $user->password = $user->password_hash;
-        return $this->render('edit',['user'=>$user]);
+        return $this->render('add',['user'=>$user]);
     }
     public function actionDelete(){
         $requset = \Yii::$app->request;

@@ -28,7 +28,8 @@ class RoleForm extends Model
     public function rules()
     {
         return [
-            [['name','description','permissions'],'required'],
+            [['name','description'],'required'],
+            ['permissions','safe']
         ];
     }
     public static function getPermissions(){

@@ -26,7 +26,14 @@ class PermissionForm extends Model
     {
         return [
             [['name','description',],'required'],
-//            ['name','unique']
+            ['name','addName']
         ];
+    }
+    public function addName(){
+        $auth = \Yii::$app->authManager;
+        $permission = $auth->getPermission($this->name);
+        if ($permission){
+            $permission->addError('name','权限已存在');
+        }
     }
 }

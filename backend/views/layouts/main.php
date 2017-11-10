@@ -34,96 +34,11 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => '品牌管理',
-            'items'=>[
-                [
-                'label'=>'新增品牌',
-                'url'=>['brand/add']
-                    ],
-                [
-                    'label'=>'品牌列表',
-                    'url'=>['brand/list']
-                ],
-            ]
-        ],
-        ['label' => '文章管理',
-            'items'=>[
-                [
-                    'label'=>'新增文章',
-                    'url'=>['article/add']
-                ],
-                [
-                    'label'=>'文章列表',
-                    'url'=>['article/list']
-                ],
-                [
-                    'label'=>'文章分类列表',
-                    'url'=>['article-category/list']
-                ],
-                [
-                    'label'=>'新增文章分类',
-                    'url'=>['article-category/add']
-                ],
-            ]
-        ],
-        ['label' => '商品管理',
-            'items'=>[
-                [
-                    'label'=>'新增商品',
-                    'url'=>['goods/add']
-                ],
-                [
-                    'label'=>'商品列表',
-                    'url'=>['goods/list']
-                ],
-                [
-                    'label'=>'商品分类列表',
-                    'url'=>['goods-category/list']
-                ],
-                [
-                    'label'=>'新增商品分类',
-                    'url'=>['goods-category/add']
-                ],
-            ]
-        ],
-        ['label' => 'RBAC',
-            'items'=>[
-                [
-                    'label'=>'新增权限',
-                    'url'=>['permission/add']
-                ],
-                [
-                    'label'=>'权限列表',
-                    'url'=>['permission/list']
-                ],
-                [
-                    'label'=>'新增角色',
-                    'url'=>['role/add']
-                ],
-                [
-                    'label'=>'角色列表',
-                    'url'=>['role/list']
-                ],
-            ]
-        ],
-        ['label' => '用户管理',
-            'items'=>[
-                [
-                    'label'=>'新增用户',
-                    'url'=>['user/add']
-                ],
-                [
-                    'label'=>'用户列表',
-                    'url'=>['user/list']
-                ],
-            ]
-        ],
 
-    ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {
+        $menuItems[] = Yii::$app->user->identity->menus;
         $menuItems[] = ['label' => '修改密码', 'url' => ['/reset/reset']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/login/logout'], 'post')

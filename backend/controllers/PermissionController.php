@@ -25,16 +25,16 @@ class PermissionController extends Controller
             $permission->load($request->post());
             if ($permission->validate()){
                 $auth = \Yii::$app->authManager;
-                if ($auth->getPermission($permission->name) === null){
+//                if ($auth->getPermission($permission->name) === null){
                     $perm = $auth->createPermission($permission->name);
                     $perm->description = $permission->description;
                     $auth->add($perm);
-                }else{
-                    \Yii::$app->session->setFlash('danger','权限名已存在');
-                    return $this->redirect(['add']);
-                }
-                \Yii::$app->session->setFlash('success','添加成功');
-                return $this->redirect(['list']);
+                    \Yii::$app->session->setFlash('success','添加成功');
+                    return $this->redirect(['list']);
+//                }else{
+//                    $permission->addError('name','权限已存在');
+//                }
+
             }else{
                 var_dump($permission->getErrors());die;
             }
