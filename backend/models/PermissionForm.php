@@ -15,6 +15,9 @@ class PermissionForm extends Model
 {
     public $name;
     public $description;
+    public $oldName;
+    const SCENARIO_ADD = 'add';
+    const SCENARIO_EDIT = 'edit';
     public function attributeLabels()
     {
         return [
@@ -26,14 +29,25 @@ class PermissionForm extends Model
     {
         return [
             [['name','description',],'required'],
-            ['name','addName']
+            ['name','addName','on'=>[self::SCENARIO_ADD]],
+            ['name','editName','on'=>[self::SCENARIO_EDIT]],
         ];
     }
     public function addName(){
+        //自定义验证,只验证失败情况
         $auth = \Yii::$app->authManager;
         $permission = $auth->getPermission($this->name);
         if ($permission){
-            $permission->addError('name','权限已存在');
+            $this->addError('name','权限已存在');
+        }
+    }
+    public function editName(){
+        $auth = \Yii::$app->authManager;
+        if ($this->oldName != $this->name){
+            $permission = $auth->getPermission($this->name);
+            if ($permission){
+                $this->addError('name','权限已存在');
+            }
         }
     }
 }

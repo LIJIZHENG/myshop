@@ -13,7 +13,7 @@ use backend\models\User;
 use yii\data\Pagination;
 use yii\web\Controller;
 
-class UserController extends Controller
+class UserController extends CommonController
 {
     public function actionList(){
         $query = User::find()->where(['status'=>1]);

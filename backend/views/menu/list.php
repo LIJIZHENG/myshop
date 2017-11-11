@@ -1,4 +1,5 @@
 <div class="container">
+    <a href="<?=\yii\helpers\Url::to(['add'])?>" class="btn btn-success">新增</a>
     <table class="table table-bordered">
         <tr>
             <th>名称</th>
@@ -8,7 +9,7 @@
         </tr>
         <?php foreach ($menus as $menu):?>
             <tr>
-                <td><?=str_repeat('-',($menu->depth)*3)?><?=$menu->name?></td>
+                <td><?=str_repeat('-',($menu->depth)*5)?><?=$menu->name?></td>
                 <td><?=$menu->route?></td>
                 <td><?=$menu->sort?></td>
                 <td>

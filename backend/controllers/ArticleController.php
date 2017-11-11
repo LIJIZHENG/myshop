@@ -15,7 +15,7 @@ use yii\data\Pagination;
 use yii\web\Controller;
 
 
-class ArticleController extends Controller
+class ArticleController extends CommonController
 {
     public function actionList(){
         //分页

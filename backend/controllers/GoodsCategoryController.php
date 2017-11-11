@@ -12,7 +12,7 @@ namespace backend\controllers;
 use backend\models\GoodsCategory;
 use yii\web\Controller;
 
-class GoodsCategoryController extends Controller
+class GoodsCategoryController extends CommonController
 {
     public function actionList(){
         $gCategories = GoodsCategory::find()->orderBy(['tree'=>'ASC','lft'=>'ASC'])->all();

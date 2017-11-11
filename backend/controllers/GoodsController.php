@@ -15,7 +15,7 @@ use backend\models\GoodsIntro;
 use yii\data\Pagination;
 use yii\web\Controller;
 
-class GoodsController extends Controller
+class GoodsController extends CommonController
 {
     public $enableCsrfValidation = false;
     public function actionList(){

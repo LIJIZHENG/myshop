@@ -15,12 +15,12 @@ use yii\captcha\CaptchaAction;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
-class LoginController extends Controller
+class LoginController extends CommonController
 {
     public function actionLogin(){
-        if  (!\Yii::$app->user->getIsGuest()){
-            return $this->redirect(['user/list']);
-        }
+//        if  (!\Yii::$app->user->getIsGuest()){
+//            return $this->redirect(['user/list']);
+//        }
         $userForm = new UserForm();
         $request = \Yii::$app->request;
         if ($request->isPost){

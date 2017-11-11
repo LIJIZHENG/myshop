@@ -39,19 +39,37 @@ class User extends ActiveRecord implements IdentityInterface
         $roles = \Yii::$app->authManager->getRoles();
         return ArrayHelper::map($roles,'name','description');
     }
+//    public function getMenus(){
+//        $menuItems = [];
+//        $menus = Menu::find()->where(['parent_id'=>0])->all();
+//        foreach ($menus as $menu){
+//            $items = [];
+//            $children = $menu->children;
+////            var_dump($children);die;
+//            foreach ($children as $child){
+//                if (\Yii::$app->user->can($child->route)){
+//                    $items[] = ['label'=>$child->name,'url'=>[$child->route]];
+//                }
+//            }
+//            $menuItem[] = ['label'=>$menu->name,'items'=>$items];
+//            if ($items){
+//                $menuItems[] = $menuItem;
+//            }
+//        }
+//        return $menuItems;
+//    }
     public function getMenus(){
         $menuItems = [];
         $menus = Menu::find()->where(['parent_id'=>0])->all();
         foreach ($menus as $menu){
-            $item = [];
-            $children = $menu->children;
-            foreach ($children as $child){
-                if (\Yii::$app->user->can($child->route)){
-                    $item[] = ['label'=>$child->name,'url'=>$child->route];
+            $items = [];
+            foreach ($menu->children as $child){
+                if(\Yii::$app->user->can($child->route)){
+                    $items[] =  ['label'=>$child->name,'url'=>[$child->route]];
                 }
             }
-            $menuItem[] = ['label'=>$menu->name,'item'=>$item];
-            if ($item){
+            $menuItem = ['label'=>$menu->name,'items'=>$items];
+            if($items){
                 $menuItems[] = $menuItem;
             }
         }

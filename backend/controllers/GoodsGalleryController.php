@@ -12,7 +12,7 @@ namespace backend\controllers;
 use backend\models\GoodsGallery;
 use yii\web\Controller;
 
-class GoodsGalleryController extends Controller
+class GoodsGalleryController extends CommonController
 {
     public function actionList($id){
         $goodsGalleries = GoodsGallery::find()->where(['goods_id'=>$id])->all();

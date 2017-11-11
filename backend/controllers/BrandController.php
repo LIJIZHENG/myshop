@@ -19,7 +19,7 @@ use Qiniu\Auth;
 // 引入上传类
 use Qiniu\Storage\UploadManager;
 
-class BrandController extends Controller
+class BrandController extends CommonController
 {
     public $enableCsrfValidation = false;
 

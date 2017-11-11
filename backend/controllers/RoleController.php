@@ -13,7 +13,7 @@ use backend\models\RoleForm;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
-class RoleController extends Controller
+class RoleController extends CommonController
 {
     public function actionList(){
         $roles = \Yii::$app->authManager->getRoles();

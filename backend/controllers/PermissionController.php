@@ -11,8 +11,9 @@ namespace backend\controllers;
 
 use backend\models\PermissionForm;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
-class PermissionController extends Controller
+class PermissionController extends CommonController
 {
     public function actionList(){
         $permissions = \Yii::$app->authManager->getPermissions();
@@ -20,6 +21,7 @@ class PermissionController extends Controller
     }
     public function actionAdd(){
         $permission = new PermissionForm();
+        $permission->scenario = PermissionForm::SCENARIO_ADD;
         $request = \Yii::$app->request;
         if ($request->isPost){
             $permission->load($request->post());
@@ -44,7 +46,12 @@ class PermissionController extends Controller
     public function actionEdit($name){
         $auth = \Yii::$app->authManager;
         $perm = $auth->getPermission($name);
+        if ($perm === null){
+            throw new NotFoundHttpException('该权限不存在');
+        }
         $permission = new PermissionForm();
+        $permission->scenario = PermissionForm::SCENARIO_EDIT;
+        $permission->oldName = $perm->name;
         $permission->name = $perm->name;
         $permission->description = $perm->description;
         $request = \Yii::$app->request;

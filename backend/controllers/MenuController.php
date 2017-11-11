@@ -12,7 +12,7 @@ namespace backend\controllers;
 use backend\models\Menu;
 use yii\web\Controller;
 
-class MenuController extends Controller
+class MenuController extends CommonController
 {
     public function actionList(){
         $menus = Menu::find()->all();

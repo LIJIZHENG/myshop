@@ -38,7 +38,8 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {
-        $menuItems[] = Yii::$app->user->identity->menus;
+//        $menuItems[] = Yii::$app->user->identity->menus;
+//        var_dump(Yii::$app->user->identity->menus);die;
         $menuItems[] = ['label' => '修改密码', 'url' => ['/reset/reset']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/login/logout'], 'post')
