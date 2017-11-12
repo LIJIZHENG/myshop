@@ -9,10 +9,11 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\GoodsGallery;
 use yii\web\Controller;
 
-class GoodsGalleryController extends CommonController
+class GoodsGalleryController extends Controller
 {
     public function actionList($id){
         $goodsGalleries = GoodsGallery::find()->where(['goods_id'=>$id])->all();
@@ -38,5 +39,13 @@ class GoodsGalleryController extends CommonController
         }else{
             return 0;
         }
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

@@ -80,7 +80,7 @@
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
-                        <input type="checkbox" class="chb"  /> 保存登录信息
+                        <input type="checkbox" class="chb" name="rememberMe"  /> 保存登录信息
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
@@ -184,7 +184,7 @@
             var hash = $('#change').attr('captchaHash');
             var v = value.toLowerCase();
             var h = 0;
-            for (var i = 0;i <= v.length-1;i++){
+            for (var i = v.length-1;i >= 0;i--){
                 h += v.charCodeAt(i);
             }
             return h == hash;

@@ -18,13 +18,17 @@ class MemberController extends Controller
         $member = new Member();
         $request = \Yii::$app->request;
         if ($request->isPost){
-            $member->load($request->post());
+            $member->load($request->post(),'');
             if ($member->validate()){
                 $member->password_hash = \Yii::$app->security->generatePasswordHash($member->password_hash);
+                $member->status = 1;
+                $member->auth_key = \Yii::$app->security->generateRandomString();
+                $member->created_at = time();
+                var_dump($member);die;
                 $member->save();
                 echo "注册成功";die;
             }else{
-                echo "注册失败";
+                var_dump($member->getErrors());
             }
         }
         return $this->render('regist');
@@ -34,9 +38,8 @@ class MemberController extends Controller
         $username = $request->post('username');
         $member = Member::findOne(['username'=>$username]);
         if ($member){
-            return false;
-        }else{
-            return true;
+            return 'false';
         }
+         return 'true';
     }
 }

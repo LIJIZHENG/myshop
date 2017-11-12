@@ -9,13 +9,14 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\Article;
 use backend\models\ArticleDetail;
 use yii\data\Pagination;
 use yii\web\Controller;
 
 
-class ArticleController extends CommonController
+class ArticleController extends Controller
 {
     public function actionList(){
         //分页
@@ -86,5 +87,13 @@ class ArticleController extends CommonController
         $base = Article::findOne(['id'=>$id]);
         $detail = ArticleDetail::findOne(['article_id'=>$id]);
         return $this->render('detail',['base'=>$base,'detail'=>$detail]);
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

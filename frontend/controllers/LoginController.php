@@ -18,13 +18,17 @@ class LoginController extends Controller
         $loginForm = new LoginForm();
         $request = \Yii::$app->request;
         if ($request->isPost){
-            $loginForm->load($request->post());
+            $loginForm->load($request->post(),'');
             if ($loginForm->validate() && $loginForm->check()){
                 echo '登录成功';die;
             }else{
-                echo '登录失败';die;
+                echo '登录失败';
             }
         }
         return $this->render('login');
+    }
+    public function actionLogout(){
+        \Yii::$app->user->logout();
+        return $this->redirect(['login/login']);
     }
 }

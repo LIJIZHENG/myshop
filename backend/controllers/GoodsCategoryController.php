@@ -9,10 +9,11 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\GoodsCategory;
 use yii\web\Controller;
 
-class GoodsCategoryController extends CommonController
+class GoodsCategoryController extends Controller
 {
     public function actionList(){
         $gCategories = GoodsCategory::find()->orderBy(['tree'=>'ASC','lft'=>'ASC'])->all();
@@ -81,5 +82,13 @@ class GoodsCategoryController extends CommonController
                 return -1;
             }
         }
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

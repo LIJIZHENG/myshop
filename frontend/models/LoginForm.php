@@ -16,6 +16,7 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $checkcode;
+    public $rememberMe;
     public function rules()
     {
         return [
@@ -24,15 +25,18 @@ class LoginForm extends Model
         ];
     }
     public function check(){
-        $result = Member::findOne(['username'=>$this->username]);
-        if ($result){
-            if (\Yii::$app->security->validatePassword($this->password,$result->password_hash)){
+        $member = Member::findOne(['username'=>$this->username]);
+        if ($member){
+            if (\Yii::$app->security->validatePassword($this->password,$member->password_hash)){
+                $member->last_login_time = time();
+                $member->last_login_ip = ip2long(\Yii::$app->request->userIP);
+                $member->save(0);
+                \Yii::$app->user->login($member,$this->rememberMe?7*24*3600:0);
                 return true;
             }else{
                 return false;
             }
-        }else {
-            return false;
         }
+        return false;
     }
 }

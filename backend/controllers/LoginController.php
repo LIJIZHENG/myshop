@@ -10,12 +10,13 @@ namespace backend\controllers;
 
 
 
+use backend\filter\RbacFilter;
 use backend\models\UserForm;
 use yii\captcha\CaptchaAction;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
-class LoginController extends CommonController
+class LoginController extends Controller
 {
     public function actionLogin(){
 //        if  (!\Yii::$app->user->getIsGuest()){
@@ -52,20 +53,4 @@ class LoginController extends CommonController
             ]
         ];
     }
-//    public function behaviors()
-//    {
-//        return [
-//          'access'=>[
-//              'class'=>AccessControl::className(),
-//              'except'=>['login'],
-//              'rules'=>[
-//                  [
-//                      'actions'=>['login'],
-//                      'allow'=>false,
-//                      'roles'=>['?']
-//                  ]
-//              ]
-//          ]
-//        ];
-//    }
 }

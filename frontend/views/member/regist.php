@@ -71,12 +71,12 @@
                     </li>
                     <li>
                         <label for="">密码：</label>
-                        <input type="password" class="txt" name="password_hash" />
+                        <input type="password" class="txt" name="password_hash" id="password"/>
                         <p>6-20位字符，可使用字母、数字和符号的组合，不建议使用纯数字、纯字母、纯符号</p>
                     </li>
                     <li>
                         <label for="">确认密码：</label>
-                        <input type="password" class="txt" name="repassword" />
+                        <input type="password" class="txt" name="repassword" id="repassword" />
                         <p> <span>请再次输入密码</p>
                     </li>
                     <li>
@@ -153,48 +153,32 @@
 <!-- 底部版权 end -->
 
 <script type="text/javascript">
-//    function bindPhoneNum(){
-//        //启用输入框
-//        $('#captcha').prop('disabled',false);
-//
-//        var time=30;
-//        var interval = setInterval(function(){
-//            time--;
-//            if(time<=0){
-//                clearInterval(interval);
-//                var html = '获取验证码';
-//                $('#get_captcha').prop('disabled',false);
-//            } else{
-//                var html = time + ' 秒后再次获取';
-//                $('#get_captcha').prop('disabled',true);
-//            }
-//
-//            $('#get_captcha').val(html);
-//        },1000);
-//    }
+
     $().ready(function() {
-// 在键盘按下并释放及提交后验证提交表单
         $("#registForm").validate({
             rules: {
                 username: {
                     required: true,
                     rangelength:[3,20],
                     remote:{
-                        url:"<?=\yii\helpers\Url::to(['member/checkName'])?>"
+                        url:"<?=\yii\helpers\Url::to(['member/check-name'])?>"
                     }
                 },
                 password_hash: {
                     required: true,
+                    rangelength:[6,20]
                 },
                 repassword:{
                     required:true,
+                    checkPassword:true
                 },
                 email:{
                     required:true,
-                    email:true,
+                    email:true
                 },
                 tel:{
                     required:true,
+                    checkTel:true
                 },
                 checkcode:{
                     checkCaptcha:true
@@ -211,46 +195,56 @@
                 },
                 password_hash: {
                     required: "请输入密码",
-//                    minlength: "密码长度不能小于 5 个字母"
+                    rangelength:"密码的长度为6-20个字符"
                 },
                 repassword:{
-                    required:"再次输入密码",
+                    required:"再次输入密码"
                 },
                 email:{
                     required:"请输入邮箱",
-                    email:"请输入正确的邮箱",
+                    email:"请输入正确的邮箱"
                 },
                 tel:{
-                    required:"请输入手机号码",
+                    required:"请输入手机号码"
                 },
                 agree:{
                     required:""
                 }
             },
-            errorElement:'span',
+            errorElement:'span'
         });
         $('#change').click(function () {
             flushCaptcha();
         });
+        //获取验证码
         var flushCaptcha = function () {
             $.getJSON('<?=\yii\helpers\Url::to(['site/captcha',\yii\captcha\CaptchaAction::REFRESH_GET_VAR=>1])?>',
                 function (data) {
-                    console.debug(data);
                     $('#imgCaptcha').attr('src',data.url);
                     $('#imgCaptcha').attr('captchaHash',data.hash1);
                 })
         };
         flushCaptcha();
+        //验证验证码
         jQuery.validator.addMethod("checkCaptcha", function(value, element) {
-            var hash = $('#change').attr('captchaHash');
+            var hash = $('#imgCaptcha').attr('captchaHash');
             var v = value.toLowerCase();
             var h = 0;
-            for (var i = 0;i < v.length;i++){
+            for (var i = v.length-1;i >= 0;i--){
                 h += v.charCodeAt(i);
             }
-            console.debug(h == hash);
             return h == hash;
         }, "验证码输入不正确");
+        //验证密码是否一致
+        jQuery.validator.addMethod("checkPassword", function(value, element) {
+           var password = $('#password').val();
+           return password == value;
+        }, "两次输入的密码不一致");
+        //验证手机号
+        jQuery.validator.addMethod("checkTel", function(value, element) {
+          var reg = /^1[34578]\d{9}$/;
+          return reg.test(value);
+        }, "请输入正确手机号码");
     });
 </script>
 </body>

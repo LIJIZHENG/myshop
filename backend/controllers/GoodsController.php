@@ -9,13 +9,14 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\Goods;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsIntro;
 use yii\data\Pagination;
 use yii\web\Controller;
 
-class GoodsController extends CommonController
+class GoodsController extends Controller
 {
     public $enableCsrfValidation = false;
     public function actionList(){
@@ -128,6 +129,19 @@ class GoodsController extends CommonController
         return [
             'upload' => [
                 'class' => 'kucha\ueditor\UEditorAction',
+                'config' => [
+                    "imageAllowFiles"=> [".png", ".jpg", ".jpeg", ".gif"],
+                    "imageUrlPrefix"  => "http://admin.myshop.com/",//图片访问路径前缀
+                    "imagePathFormat" => "/images/".uniqid() //上传保存路径
+                ],
+            ]
+        ];
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
             ]
         ];
     }

@@ -9,6 +9,7 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\Brand;
 use yii\data\Pagination;
 use yii\helpers\Json;
@@ -19,7 +20,7 @@ use Qiniu\Auth;
 // 引入上传类
 use Qiniu\Storage\UploadManager;
 
-class BrandController extends CommonController
+class BrandController extends Controller
 {
     public $enableCsrfValidation = false;
 
@@ -118,5 +119,13 @@ class BrandController extends CommonController
                 return Json::encode(['url'=>$file]);
             }
         }
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

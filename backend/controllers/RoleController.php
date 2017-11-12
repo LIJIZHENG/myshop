@@ -9,11 +9,12 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\RoleForm;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
-class RoleController extends CommonController
+class RoleController extends Controller
 {
     public function actionList(){
         $roles = \Yii::$app->authManager->getRoles();
@@ -84,5 +85,13 @@ class RoleController extends CommonController
         $role = $auth->getRole($name);
         $result = $auth->remove($role);
         return $result?1:0;
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

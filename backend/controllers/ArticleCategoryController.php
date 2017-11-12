@@ -9,12 +9,13 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\Article;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 use yii\web\Controller;
 
-class ArticleCategoryController extends CommonController
+class ArticleCategoryController extends Controller
 {
     public function actionList(){
         //分页
@@ -73,5 +74,13 @@ class ArticleCategoryController extends CommonController
         }else{
             return 0;
         }
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

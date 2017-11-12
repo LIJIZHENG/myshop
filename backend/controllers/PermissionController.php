@@ -9,11 +9,12 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\PermissionForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class PermissionController extends CommonController
+class PermissionController extends Controller
 {
     public function actionList(){
         $permissions = \Yii::$app->authManager->getPermissions();
@@ -81,5 +82,13 @@ class PermissionController extends CommonController
         $permission = $auth->getPermission($name);
         $result = $auth->remove($permission);
         return $result?1:0;
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }

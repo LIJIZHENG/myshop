@@ -9,11 +9,12 @@
 namespace backend\controllers;
 
 
+use backend\filter\RbacFilter;
 use backend\models\User;
 use yii\data\Pagination;
 use yii\web\Controller;
 
-class UserController extends CommonController
+class UserController extends Controller
 {
     public function actionList(){
         $query = User::find()->where(['status'=>1]);
@@ -83,5 +84,13 @@ class UserController extends CommonController
         }else{
             return 0;
         }
+    }
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+            ]
+        ];
     }
 }
