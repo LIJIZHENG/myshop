@@ -36,9 +36,10 @@ AppAsset::register($this);
     ]);
 
     if (Yii::$app->user->isGuest) {
+        $menuItems = [];
         $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {
-//        $menuItems[] = Yii::$app->user->identity->menus;
+        $menuItems = Yii::$app->user->identity->menus;
 //        var_dump(Yii::$app->user->identity->menus);die;
         $menuItems[] = ['label' => '修改密码', 'url' => ['/reset/reset']];
         $menuItems[] = '<li>'
@@ -50,6 +51,7 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
     }
+//    var_dump($menuItems);die;
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,

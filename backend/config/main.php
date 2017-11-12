@@ -12,6 +12,12 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [],
+    'on beforeLogin' => function($event) {
+        $user = $event->identity;
+        $user->last_login_time = time();
+        $user->last_login_ip = \Yii::$app->request->userIP;
+        $user->save(0);
+    },
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
