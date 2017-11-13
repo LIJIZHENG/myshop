@@ -14,13 +14,15 @@ use yii\web\Controller;
 
 class LoginController extends Controller
 {
+    public $enableCsrfValidation = false;
     public function actionLogin(){
         $loginForm = new LoginForm();
         $request = \Yii::$app->request;
         if ($request->isPost){
             $loginForm->load($request->post(),'');
+            $loginForm->rememberMe = $request->post('rememberMe');
             if ($loginForm->validate() && $loginForm->check()){
-                echo '登录成功';die;
+                echo '登录成功';
             }else{
                 echo '登录失败';
             }

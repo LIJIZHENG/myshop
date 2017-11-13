@@ -90,7 +90,7 @@
                     </li>
                     <li>
                         <label for="">验证码：</label>
-                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="captcha" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
+                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="captcha" disabled="disabled" id="captcha"/> <input type="button" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
 
                     </li>
                     <li class="checkcode">
@@ -153,8 +153,38 @@
 <!-- 底部版权 end -->
 
 <script type="text/javascript">
-
     $().ready(function() {
+        $('#get_captcha').click(function () {
+            $('#captcha').prop('disabled',false);
+
+            var time=30;
+            var interval = setInterval(function(){
+                time--;
+                if(time<=0){
+                    clearInterval(interval);
+                    var html = '获取验证码';
+                    $('#get_captcha').prop('disabled',false);
+                } else{
+                    var html = time + ' 秒后再次获取';
+                    $('#get_captcha').prop('disabled',true);
+                }
+
+                $('#get_captcha').val(html);
+            },1000);
+            //发送短信的ajax请求
+            var phone = $('#tel').val();
+            var reg = /^1[34578]\d{9}$/;
+            if (reg.test(phone)){
+                $.post('<?=\yii\helpers\Url::to(['send-sms'])?>',{'phone':phone},function (data) {
+                    if (!data){
+                        alert('发送失败');
+                    }
+                })
+            }else{
+                alert('请输入正确的手机号码');
+            }
+
+        });
         $("#registForm").validate({
             rules: {
                 username: {
@@ -185,6 +215,21 @@
                 },
                 agree:{
                     required:true
+                },
+                captcha:{
+                    remote:{
+                        url:"<?=\yii\helpers\Url::to(['member/check-captcha'])?>",
+                        type:"post",
+                        dataType:"json",
+                        data:{
+                            captcha:function () {
+                                return $('#captcha').val();
+                            },
+                            tel:function () {
+                                return $('#tel').val();
+                            }
+                        }
+                    }
                 }
             },
             messages: {
@@ -209,6 +254,9 @@
                 },
                 agree:{
                     required:""
+                },
+                captcha:{
+                    remote:"请输入正确的手机号或验证码"
                 }
             },
             errorElement:'span'

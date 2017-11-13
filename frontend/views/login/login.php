@@ -80,7 +80,7 @@
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
-                        <input type="checkbox" class="chb" name="rememberMe"  /> 保存登录信息
+                        <input type="checkbox" class="chb" name="rememberMe" value="1" /> 保存登录信息
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
@@ -174,14 +174,13 @@
         var flushCaptcha = function () {
             $.getJSON('<?=\yii\helpers\Url::to(['site/captcha',\yii\captcha\CaptchaAction::REFRESH_GET_VAR=>1])?>',
                 function (data) {
-                console.debug(data);
                 $('#imgCaptcha').attr('src',data.url);
                 $('#imgCaptcha').attr('captchaHash',data.hash1);
             })
         };
         flushCaptcha();
         jQuery.validator.addMethod("checkCaptcha", function(value, element) {
-            var hash = $('#change').attr('captchaHash');
+            var hash = $('#imgCaptcha').attr('captchaHash');
             var v = value.toLowerCase();
             var h = 0;
             for (var i = v.length-1;i >= 0;i--){

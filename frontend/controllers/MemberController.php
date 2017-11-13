@@ -9,11 +9,13 @@
 namespace frontend\controllers;
 
 
+use frontend\components\Sms;
 use frontend\models\Member;
 use yii\web\Controller;
 
 class MemberController extends Controller
 {
+    public $enableCsrfValidation = false;
     public function actionRegister(){
         $member = new Member();
         $request = \Yii::$app->request;
@@ -24,11 +26,10 @@ class MemberController extends Controller
                 $member->status = 1;
                 $member->auth_key = \Yii::$app->security->generateRandomString();
                 $member->created_at = time();
-                var_dump($member);die;
-                $member->save();
+                $member->save(0);
                 echo "注册成功";die;
             }else{
-                var_dump($member->getErrors());
+                var_dump($member->getErrors());die;
             }
         }
         return $this->render('regist');
@@ -41,5 +42,43 @@ class MemberController extends Controller
             return 'false';
         }
          return 'true';
+    }
+    public function actionSendSms()
+    {
+        $phone = \Yii::$app->request->post('phone');
+        $code = mt_rand(1000,9999);
+        $response = Sms::sendSms(
+            "麦mall", // 短信签名
+            "SMS_109395454", // 短信模板编号
+            $phone, // 短信接收者
+            Array(  // 短信模板中字段的值
+                "code" => $code,
+            )
+        );
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $redis->set('captcha_'.$phone,$code,5*60);
+        if ($response->Code == 'OK'){
+            return true;
+        }
+        return false;
+//        echo "发送短信(sendSms)接口返回的结果:\n";
+//        print_r($response);
+    }
+    public function actionCheckCaptcha(){
+        $request = \Yii::$app->request;
+        $captcha = $request->post('captcha');
+        $phone = $request->post('tel');
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $sms = $redis->get('captcha_'.$phone);
+        if ($sms){
+            if ($sms == $captcha){
+                return 'true';
+            }else{
+                return "false";
+            }
+        }
+        return "false";
     }
 }

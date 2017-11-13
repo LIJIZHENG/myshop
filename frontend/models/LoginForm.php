@@ -26,6 +26,7 @@ class LoginForm extends Model
     }
     public function check(){
         $member = Member::findOne(['username'=>$this->username]);
+//        var_dump($member);die;
         if ($member){
             if (\Yii::$app->security->validatePassword($this->password,$member->password_hash)){
                 $member->last_login_time = time();

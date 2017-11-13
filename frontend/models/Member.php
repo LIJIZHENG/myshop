@@ -16,14 +16,28 @@ class Member extends ActiveRecord implements IdentityInterface
 {
     public $repassword;
     public $checkcode;
+    public $captcha;
     public function rules()
     {
         return [
             [['username','password_hash','repassword','email','tel','checkcode'],'required'],
             ['password_hash','compare','compareAttribute'=>'repassword'],
             ['email','email'],
-            ['checkcode','captcha']
+            ['checkcode','captcha'],
+            ['captcha','checkCaptcha']
         ];
+    }
+    public function checkCaptcha(){
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $sms = $redis->get('captcha_'.$this->tel);
+        if ($sms){
+            if ($sms != $this->captcha){
+                $this->addError('captcha','验证码错误');
+            }
+        }else{
+            $this->addError('captcha','手机号输入错误');
+        }
     }
 
     /**
