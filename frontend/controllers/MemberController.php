@@ -27,7 +27,7 @@ class MemberController extends Controller
                 $member->auth_key = \Yii::$app->security->generateRandomString();
                 $member->created_at = time();
                 $member->save(0);
-                echo "注册成功";die;
+                return $this->redirect(['login/login']);
             }else{
                 var_dump($member->getErrors());die;
             }

@@ -23,10 +23,8 @@ class AddressController extends Controller
     public function actionAdd(){
         $request = \Yii::$app->request;
         $data = $request->post();
-//        var_dump($data);die;
         $address = new Address();
         $address->load($data,'');
-//        var_dump($address->detail);die;
         if ($address->validate()){
             $address->member_id = \Yii::$app->user->identity->getId();
             if ($address->status == 1){
@@ -35,7 +33,7 @@ class AddressController extends Controller
                 $defult->save();
             }
             $address->save();
-            $this->redirect(['index']);
+            return $this->redirect(['index']);
         }else{
             var_dump($address->getErrors());die;
         }
@@ -53,16 +51,20 @@ class AddressController extends Controller
             }
         }
     }
+    //设置默认地址
     public function actionSetDefault(){
         $member_id = \Yii::$app->user->identity->id;
         $oldAddress = Address::findOne(['member_id'=>$member_id,'status'=>1]);
-        $oldAddress->status = 0;
-        $oldAddress->save();
+        if ($oldAddress){
+            $oldAddress->status = 0;
+            $oldAddress->save();
+        }
+
         $id = \Yii::$app->request->get('id');
         $address = Address::findOne(['id'=>$id]);
         $address->status = 1;
         $address->save();
-        $this->redirect(['index']);
+        return $this->redirect(['index']);
     }
     public function actionEdit(){
         $request = \Yii::$app->request;
@@ -72,15 +74,21 @@ class AddressController extends Controller
             $id = $request->post('id');
             $address = Address::findOne(['id'=>$id]);
             $address->load($request->post(),'');
+            if ($request->post('status') === null){
+                $address->status = 0;
+            }
+//            var_dump($address);die;
             if ($address->validate()){
                 $address->member_id = \Yii::$app->user->identity->getId();
                 if ($address->status == 1 && $address->getOldAttribute('status') !=1){
                     $defult = Address::findOne(['member_id'=>$address->member_id,'status'=>1]);
-                    $defult->status = 0;
-                    $defult->save();
+                    if ($defult){
+                        $defult->status = 0;
+                        $defult->save();
+                    }
                 }
                 $address->save();
-                $this->redirect(['index']);
+                return $this->redirect(['index']);
             }else{
                 var_dump($address->getErrors());die;
             }

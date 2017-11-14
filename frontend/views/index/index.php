@@ -23,7 +23,8 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好<?=Yii::$app->user->isGuest?'':Yii::$app->user->identity->username?>，欢迎来到京西！[<a href="<?=\yii\helpers\Url::to(Yii::$app->user->isGuest?['login/login']:['login/logout'])?>"><?=Yii::$app->user->isGuest?'登录':'注销'?></a>]
+                    <?=Yii::$app->user->isGuest?'[<a href="'.\yii\helpers\Url::to(['member/register']).'">免费注册</a>]':''?></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -74,13 +75,13 @@
                 </dt>
                 <dd>
                     <div class="prompt">
-                        您好，请<a href="">登录</a>
+                        您好<?=Yii::$app->user->isGuest?'，请<a href="'.\yii\helpers\Url::to(['login/login']).'">登录</a>':Yii::$app->user->identity->username?>
                     </div>
                     <div class="uclist mt10">
                         <ul class="list1 fl">
                             <li><a href="">用户信息></a></li>
                             <li><a href="">我的订单></a></li>
-                            <li><a href="">收货地址></a></li>
+                            <li><a href="<?=Yii::$app->user->isGuest?\yii\helpers\Url::to(['login/login']):\yii\helpers\Url::to(['address/index'])?>">收货地址></a></li>
                             <li><a href="">我的收藏></a></li>
                         </ul>
 
@@ -139,14 +140,14 @@
 
                 <?php foreach ($categories as $category):?>
                 <div class="cat">
-                    <h3><a href=""><?=$category->name?></a><b></b></h3>
+                    <h3><a href="<?=\yii\helpers\Url::to(['list/list','tree'=>$category->tree])?>"><?=$category->name?></a><b></b></h3>
                     <div class="cat_detail">
                         <?php foreach (\backend\models\GoodsCategory::getChildren($category->id) as $erji):?>
                         <dl class="dl_1st">
-                            <dt><a href=""><?=$erji->name?></a></dt>
+                            <dt><a href="<?=\yii\helpers\Url::to(['list/list','lft'=>$erji->lft,'rgt'=>$erji->rgt])?>"><?=$erji->name?></a></dt>
                             <dd>
                                 <?php foreach ($erji->children()->all() as $sanji):?>
-                                <a href=""><?=$sanji->name?></a>
+                                <a href="<?=\yii\helpers\Url::to(['list/list','id'=>$sanji->id])?>"><?=$sanji->name?></a>
                                 <?php endforeach;?>
                             </dd>
                         </dl>
@@ -636,64 +637,17 @@
 
 <!-- 底部导航 start -->
 <div class="bottomnav w1210 bc mt10">
-    <div class="bnav1">
-        <h3><b></b> <em>购物指南</em></h3>
+    <?php $k=1; foreach ($articleCat as $cat):?>
+    <div class="bnav<?=$k?>">
+        <h3><b></b> <em><?=$cat->name?></em></h3>
         <ul>
-            <li><a href="">购物流程</a></li>
-            <li><a href="">会员介绍</a></li>
-            <li><a href="">团购/机票/充值/点卡</a></li>
-            <li><a href="">常见问题</a></li>
-            <li><a href="">大家电</a></li>
-            <li><a href="">联系客服</a></li>
+            <?php $articles = \backend\models\Article::find()->where(['status'=>1])->andWhere(['article_category_id'=>$cat->id])->all();
+            foreach ($articles as $article):?>
+            <li><a href=""><?=$article->name?></a></li>
+            <?php endforeach;?>
         </ul>
     </div>
-
-    <div class="bnav2">
-        <h3><b></b> <em>配送方式</em></h3>
-        <ul>
-            <li><a href="">上门自提</a></li>
-            <li><a href="">快速运输</a></li>
-            <li><a href="">特快专递（EMS）</a></li>
-            <li><a href="">如何送礼</a></li>
-            <li><a href="">海外购物</a></li>
-        </ul>
-    </div>
-
-
-    <div class="bnav3">
-        <h3><b></b> <em>支付方式</em></h3>
-        <ul>
-            <li><a href="">货到付款</a></li>
-            <li><a href="">在线支付</a></li>
-            <li><a href="">分期付款</a></li>
-            <li><a href="">邮局汇款</a></li>
-            <li><a href="">公司转账</a></li>
-        </ul>
-    </div>
-
-    <div class="bnav4">
-        <h3><b></b> <em>售后服务</em></h3>
-        <ul>
-            <li><a href="">退换货政策</a></li>
-            <li><a href="">退换货流程</a></li>
-            <li><a href="">价格保护</a></li>
-            <li><a href="">退款说明</a></li>
-            <li><a href="">返修/退换货</a></li>
-            <li><a href="">退款申请</a></li>
-        </ul>
-    </div>
-
-    <div class="bnav5">
-        <h3><b></b> <em>特色服务</em></h3>
-        <ul>
-            <li><a href="">夺宝岛</a></li>
-            <li><a href="">DIY装机</a></li>
-            <li><a href="">延保服务</a></li>
-            <li><a href="">家电下乡</a></li>
-            <li><a href="">京东礼品卡</a></li>
-            <li><a href="">能效补贴</a></li>
-        </ul>
-    </div>
+    <?php $k++; endforeach;?>
 </div>
 <!-- 底部导航 end -->
 

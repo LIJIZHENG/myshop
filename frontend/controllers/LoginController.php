@@ -22,7 +22,7 @@ class LoginController extends Controller
             $loginForm->load($request->post(),'');
             $loginForm->rememberMe = $request->post('rememberMe');
             if ($loginForm->validate() && $loginForm->check()){
-                echo '登录成功';
+                return $this->redirect(['index/index']);
             }else{
                 echo '登录失败';
             }
