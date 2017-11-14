@@ -42,7 +42,7 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好，欢迎来到京西！[<a href="<?=\yii\helpers\Url::to(['login/login'])?>">登录</a>] [<a href="register.html">免费注册</a>] </li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -482,32 +482,26 @@
     <div class="content fl ml10">
         <div class="address_hd">
             <h3>收货地址薄</h3>
+            <?php $i = 1; foreach ($addresses as $address):?>
             <dl>
-                <dt>1.许坤 北京市 昌平区 仙人跳区 仙人跳大街 17002810530 </dt>
+                <dt><?=$i.'.'.$address->name.' '.$address->province.$address->city.$address->area.$address->detail.' '.$address->tel?></dt>
                 <dd>
-                    <a href="">修改</a>
-                    <a href="">删除</a>
-                    <a href="">设为默认地址</a>
+                    <a href="<?=\yii\helpers\Url::to(['edit','id'=>$address->id])?>" class="edit">修改</a>
+                    <a href="javascript:;" data-id="<?=$address->id?>" class="del">删除</a>
+                    <?=$address->status==1?'':'<a href="'.\yii\helpers\Url::to(['set-default','id'=>$address->id]).'" class="setDefault" >设为默认地址</a>'?>
                 </dd>
             </dl>
-            <dl class="last"> <!-- 最后一个dl 加类last -->
-                <dt>2.许坤 四川省 成都市 高新区 仙人跳大街 17002810530 </dt>
-                <dd>
-                    <a href="">修改</a>
-                    <a href="">删除</a>
-                    <a href="">设为默认地址</a>
-                </dd>
-            </dl>
-
+            <?php $i++; endforeach;?>
         </div>
 
         <div class="address_bd mt10">
             <h4>新增收货地址</h4>
-            <form action="" method="post" id="address_form" name="address_form">
+            <form action="<?=\yii\helpers\Url::to(isset($editAddress->name)?['edit']:['add'])?>" method="post" id="address_form" name="address_form">
                 <ul>
                     <li>
+                        <?=isset($editAddress->id)?'<input type="hidden" name="id" value="'.$editAddress->id.'"/>':''?>
                         <label for="name"><span>*</span>收 货 人：</label>
-                        <input type="text" name="name" id="name" class="txt" />
+                        <input type="text" name="name" id="name" class="txt" value="<?=isset($editAddress->name)?$editAddress->name:''?>" />
                     </li>
                     <li>
                         <label for="cmbProvince"><span>*</span>所在地区：</label>
@@ -526,15 +520,15 @@
                     </li>
                     <li>
                         <label for="detail"><span>*</span>详细地址：</label>
-                        <input type="text" name="detail" id="detail" class="txt address"  />
+                        <input type="text" name="detail" id="detail" class="txt address" value="<?=isset($editAddress->detail)?$editAddress->detail:''?>"/>
                     </li>
                     <li>
                         <label for="tel"><span>*</span>手机号码：</label>
-                        <input type="text" name="tel" id="tel" class="txt" />
+                        <input type="text" name="tel" id="tel" class="txt" value="<?=isset($editAddress->tel)?$editAddress->tel:''?>"/>
                     </li>
                     <li>
                         <label for="status">&nbsp;</label>
-                        <input type="checkbox" name="status" id="status" value="1" class="check" />设为默认地址
+                        <input type="checkbox" name="status" id="status" value="1" class="check" <?=(isset($editAddress->status) && $editAddress->status==1)?'checked':''?> />设为默认地址
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
@@ -550,7 +544,6 @@
 <!-- 页面主体 end-->
 
 <div style="clear:both;"></div>
-
 <!-- 底部导航 start -->
 <div class="bottomnav w1210 bc mt10">
     <div class="bnav1">
@@ -696,16 +689,30 @@
             var reg = /^1[34578]\d{9}$/;
             return reg.test(value);
         }, "请输入正确手机号码");
-        $('#save').click(function () {
-            $.post('<?=\yii\helpers\Url::to(['add'])?>',{'form':$('address_form').serialize()},function (data) {
-                var obj = parseJSON(data);
-                var content = '';
-                $.each(obj,function (i,v) {
-                    content += '<dl><dt>'+v.name+v.province+v.city+v.area+v.detail+v.tel+'</dt><dd><a href="">修改</a><a href="">删除</a><a href="">设为默认地址</a></dd></dl>';
-                });
-                $(content).appendTo('#address_hd');
-            })
-        })
+//        $('#save').click(function () {
+//            $.post('<?//=\yii\helpers\Url::to(['add'])?>//',{'form':$('#address_form').serializeArray()},function (data) {
+//                var obj = jQuery.parseJSON(data);
+//                var content = '';
+//                $.each(obj,function (i,v) {
+//                    content += '<dl><dt>'+v.name+v.province+v.city+v.area+v.detail+v.tel+'</dt>' +
+//                        '<dd><a href="<?//=\yii\helpers\Url::to(["edit","id"=>'+v.id+'])?>//">修改</a><a href="javascript:;" class="del">删除</a><a href="#">设为默认地址</a></dd></dl>';
+//                });
+//                $(content).appendTo('#address_hd');
+//            })
+//        })
+        $('.del').click(function () {
+            if (confirm('是否要删除?')){
+                var id = $(this).attr('data-id');
+                var that = this;
+                $.post('delete',{'id':id},function (data) {
+                    if (data){
+                        $(that).closest('dl').remove();
+                    }else {
+                        alert('删除失败');
+                    }
+                })
+            }
+        });
 
     });
 </script>

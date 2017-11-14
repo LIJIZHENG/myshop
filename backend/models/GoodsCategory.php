@@ -66,4 +66,8 @@ class GoodsCategory extends ActiveRecord
         $parent = self::findOne(['id'=>$parent_id]);
         return empty($parent['name'])?'顶级分类':$parent['name'];
     }
+    public static function getChildren($id){
+        $children = self::find()->where(['parent_id'=>$id])->all();
+        return $children;
+    }
 }
