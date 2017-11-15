@@ -138,23 +138,7 @@
 
             <div class="cat_bd">
 
-                <?php foreach ($categories as $category):?>
-                <div class="cat">
-                    <h3><a href="<?=\yii\helpers\Url::to(['list/list','tree'=>$category->tree])?>"><?=$category->name?></a><b></b></h3>
-                    <div class="cat_detail">
-                        <?php foreach (\backend\models\GoodsCategory::getChildren($category->id) as $erji):?>
-                        <dl class="dl_1st">
-                            <dt><a href="<?=\yii\helpers\Url::to(['list/list','lft'=>$erji->lft,'rgt'=>$erji->rgt])?>"><?=$erji->name?></a></dt>
-                            <dd>
-                                <?php foreach ($erji->children()->all() as $sanji):?>
-                                <a href="<?=\yii\helpers\Url::to(['list/list','id'=>$sanji->id])?>"><?=$sanji->name?></a>
-                                <?php endforeach;?>
-                            </dd>
-                        </dl>
-                        <?php endforeach;?>
-                    </div>
-                </div>
-                <?php endforeach;?>
+                <?=\backend\models\GoodsCategory::getIndexGoodsCategory()?>
             </div>
 
         </div>

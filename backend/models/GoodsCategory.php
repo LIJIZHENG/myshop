@@ -66,8 +66,39 @@ class GoodsCategory extends ActiveRecord
         $parent = self::findOne(['id'=>$parent_id]);
         return empty($parent['name'])?'顶级分类':$parent['name'];
     }
-    public static function getChildren($id){
-        $children = self::find()->where(['parent_id'=>$id])->all();
-        return $children;
+//    public static function getChildren($id){
+//        $children = self::find()->where(['parent_id'=>$id])->all();
+//        return $children;
+//    }
+    public static function getIndexGoodsCategory(){
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $html = $redis->get('goods-category');
+        if (!$html){
+            //查询商品顶级分类
+            $categories = self::find()->roots()->all();
+            $html = '';
+            foreach ($categories as $k1=>$category){
+                $html .='<div class="cat '.($k1==0?'item1':'').'">
+            <h3><a href="'.\yii\helpers\Url::to(['list/list','id'=>$category->id]).'">'.$category->name.'</a><b></b></h3>
+            <div class="cat_detail">';
+                //查询二级分类
+                $categorytwo = $category->children(1)->all();
+                foreach ($categorytwo as $k2=>$erji){
+                    $html .=' <dl '.($k2==0?'class="dl_1st"':'').'>
+                <dt><a href="'.\yii\helpers\Url::to(['list/list','id'=>$erji->id]).'">'.$erji->name.'</a></dt>
+                <dd>';
+                    //查询三级分类
+                    $categorythree = $erji->children()->all();
+                    foreach ($categorythree as $sanji){
+                        $html .= '<a href="'.\yii\helpers\Url::to(['list/list','id'=>$sanji->id]).'">'.$sanji->name.'</a>';
+                    }
+                    $html .=' </dd></dl>';
+                }
+                $html .= '</div></div>';
+            }
+            $redis->set('goods-category',$html,24*3600);
+        }
+        return $html;
     }
 }
