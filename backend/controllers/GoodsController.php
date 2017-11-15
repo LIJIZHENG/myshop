@@ -13,6 +13,7 @@ use backend\filter\RbacFilter;
 use backend\models\Goods;
 use backend\models\GoodsDayCount;
 use backend\models\GoodsIntro;
+use kucha\ueditor\UEditor;
 use yii\data\Pagination;
 use yii\web\Controller;
 
@@ -128,11 +129,11 @@ class GoodsController extends Controller
     {
         return [
             'upload' => [
-                'class' => 'kucha\ueditor\UEditorAction',
+                'class' => UEditor::className(),
                 'config' => [
-                    "imageAllowFiles"=> [".png", ".jpg", ".jpeg", ".gif"],
-                    "imageUrlPrefix"  => "http://admin.myshop.com/",//图片访问路径前缀
-                    "imagePathFormat" => "/images/".uniqid() //上传保存路径
+                    "imageUrlPrefix"  => "http://admin.myshop.com",//图片访问路径前缀
+                    "imagePathFormat" => "/images/image/{yyyy}{mm}{dd}/{time}{rand:6}", //上传保存路径
+                    "imageRoot" => \Yii::getAlias("@webroot"),
                 ],
             ]
         ];

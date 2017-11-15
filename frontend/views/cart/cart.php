@@ -16,13 +16,14 @@
 <body>
 <!-- 顶部导航 start -->
 <div class="topnav">
-    <div class="topnav_bd w990 bc">
+    <div class="topnav_bd w1210 bc">
         <div class="topnav_left">
 
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好<?=Yii::$app->user->isGuest?'':Yii::$app->user->identity->username?>，欢迎来到京西！[<a href="<?=\yii\helpers\Url::to(Yii::$app->user->isGuest?['login/login']:['login/logout'])?>"><?=Yii::$app->user->isGuest?'登录':'注销'?></a>]
+                    <?=Yii::$app->user->isGuest?'[<a href="'.\yii\helpers\Url::to(['member/register']).'">免费注册</a>]':''?></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -72,12 +73,12 @@
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="6">购物金额总计： <strong>￥ <span id="total">1870.00</span></strong></td>
+            <td colspan="6">购物金额总计： <strong>￥ <span id="total"></span></strong></td>
         </tr>
         </tfoot>
     </table>
     <div class="cart_btn w990 bc mt10">
-        <a href="" class="continue">继续购物</a>
+        <a href="<?=\yii\helpers\Url::to(['index/index'])?>" class="continue">继续购物</a>
         <a href="" class="checkout">结 算</a>
     </div>
 </div>
@@ -112,6 +113,17 @@
 <!-- 底部版权 end -->
 <script type="text/javascript">
     $(function () {
+        //计算总金额
+        var total = 0;
+        $(".col5 span").each(function(){
+            total += parseFloat($(this).text());
+        });
+        $("#total").text(total.toFixed(2));
+        //改变数量保存到cookie
+        var changeNum = function () {
+
+        };
+        //删除
         $('.del').click(function () {
             if (confirm('是否删除?')){
                 var id = $(this).attr('data-id');

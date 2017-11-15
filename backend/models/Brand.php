@@ -32,4 +32,8 @@ class Brand extends ActiveRecord
         $brands = self::find()->select(['id','name'])->all();
         return ArrayHelper::map($brands,'id','name');
     }
+    public static function getBrandName($id){
+        $brand = self::findOne(['id'=>$id]);
+        return $brand->name;
+    }
 }

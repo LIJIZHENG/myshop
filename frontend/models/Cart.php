@@ -39,7 +39,7 @@ class Cart extends ActiveRecord
                 <input type="text" name="amount" value="'.$v->amount.'" class="amount"/>
                 <a href="javascript:;" class="add_num"></a>
             </td>
-            <td class="col5">￥<span>'.$item->shop_price.'</span></td>
+            <td class="col5">￥<span>'.($item->shop_price)*$v->amount.'</span></td>
             <td class="col6"><a href="javascript:;" class="del" data-id="'.$v->id.'">删除</a></td>
         </tr>';
             }
