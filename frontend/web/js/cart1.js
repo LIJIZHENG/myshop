@@ -5,7 +5,9 @@
 */
 
 $(function(){
-	
+	//第一次访问计算总金额
+	count();
+
 	//减少
 	$(".reduce_num").click(function(){
 		var amount = $(this).parent().find(".amount");
@@ -17,13 +19,10 @@ $(function(){
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(amount).val());
 		$(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
+		 var goods_id = $(this).closest('tr').attr('data-id');
+		change(goods_id,$(amount).val());
 		//总计金额
-		var total = 0;
-		$(".col5 span").each(function(){
-			total += parseFloat($(this).text());
-		});
-
-		$("#total").text(total.toFixed(2));
+		count();
 	});
 
 	//增加
@@ -33,13 +32,10 @@ $(function(){
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(amount).val());
 		$(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
+        var goods_id = $(this).closest('tr').attr('data-id');
+        change(goods_id,$(amount).val());
 		//总计金额
-		var total = 0;
-		$(".col5 span").each(function(){
-			total += parseFloat($(this).text());
-		});
-
-		$("#total").text(total.toFixed(2));
+		count();
 	});
 
 	//直接输入
@@ -51,13 +47,25 @@ $(function(){
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(this).val());
 		$(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
+        var goods_id = $(this).closest('tr').attr('data-id');
+		change(goods_id,$(this).val());
 		//总计金额
-		var total = 0;
-		$(".col5 span").each(function(){
-			total += parseFloat($(this).text());
-		});
-
-		$("#total").text(total.toFixed(2));
+		count();
 
 	});
+
 });
+var count = function () {
+    var total = 0;
+    $(".col5 span").each(function(){
+        total += parseFloat($(this).text());
+    });
+
+    $("#total").text(total.toFixed(2));
+};
+//改变数量保存到数据库
+var change =function (goods_id,amount) {
+    $.post('change-num',{'goods_id':goods_id,'amount':amount},function (data) {
+
+    })
+}

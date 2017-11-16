@@ -296,7 +296,7 @@
             <!-- 图片预览区域 start -->
             <div class="preview fl">
                 <div class="midpic">
-                    <a href="http://oywgoal5u.bkt.clouddn.com/<?=$goodsGallery[0]->path?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
+                    <a href="http://oywgoal5u.bkt.clouddn.com/<?=isset($goodsGallery)?$goods->logo:$goodsGallery[0]->path?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
                         <img src="http://oywgoal5u.bkt.clouddn.com/<?=$goods->logo?>" alt="" />               <!-- 第一幅图片的中图 -->
                     </a>
                 </div>
@@ -310,13 +310,13 @@
                     <a href="javascript:;" id="forward" class="on"></a>
                     <div class="smallpic_wrap">
                         <ul>
-                            <li class="cur">
-                                <a class="zoomThumbActive" href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'images/preview_m1.jpg',largeimage: 'images/preview_l1.jpg'}">
-                                    <img src="http://oywgoal5u.bkt.clouddn.com/<?=$goods->logo?>"></a>
-                            </li>
-                            <?php foreach ($goodsGallery as $gallery):?>
-                            <li>
-                                <a href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'images/preview_m2.jpg',largeimage: 'images/preview_l2.jpg'}">
+<!--                            <li class="cur">-->
+<!--                                <a class="zoomThumbActive" href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'images/preview_m1.jpg',largeimage: 'images/preview_l1.jpg'}">-->
+<!--                                    <img src="http://oywgoal5u.bkt.clouddn.com/--><?//=$goods->logo?><!--"></a>-->
+<!--                            </li>-->
+                            <?php foreach ($goodsGallery as $k=>$gallery):?>
+                            <li <?=$k==0?'class="cur"':''?>>
+                                <a href="javascript:void(0);" <?=$k==0?'class="zoomThumbActive"':''?> rel="{gallery: 'gal1', smallimage: 'http://oywgoal5u.bkt.clouddn.com/<?=$gallery->path?>',largeimage: 'http://oywgoal5u.bkt.clouddn.com/<?=$gallery->path?>'}">
                                     <img src="http://oywgoal5u.bkt.clouddn.com/<?=$gallery->path?>"></a>
                             </li>
                             <?php endforeach;?>
@@ -346,7 +346,7 @@
                                     <a href="javascript:;" id="reduce_num"></a>
                                     <input type="text" name="amount" value="1" class="amount"/>
                                     <a href="javascript:;" id="add_num"></a>
-                                    <input type="hidden" name="goods_id" value="<?=$goods->id?>?">
+                                    <input type="hidden" name="goods_id" value="<?=$goods->id?>">
                                 </dd>
                             </dl>
                         </li>

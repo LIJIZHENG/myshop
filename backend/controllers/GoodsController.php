@@ -36,7 +36,7 @@ class GoodsController extends Controller
             }
 
             $pagination->totalCount = $query->count();
-            $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
+            $goods = $query->limit($pagination->limit)->offset($pagination->offset)->andWhere(['status'=>1])->all();
             return $this->render('list',['goods'=>$goods,'pagination'=>$pagination,'search'=>$search]);
         }
         $pagination->totalCount = $query->count();
@@ -44,7 +44,7 @@ class GoodsController extends Controller
         $search['sn']='';
         $search['lowPrice']='';
         $search['highPrice']='';
-        $goods = $query->limit($pagination->limit)->offset($pagination->offset)->all();
+        $goods = $query->limit($pagination->limit)->offset($pagination->offset)->andWhere(['status'=>1])->all();
         return $this->render('list',['goods'=>$goods,'pagination'=>$pagination,'search'=>$search]);
     }
     public function actionAdd(){
@@ -129,7 +129,7 @@ class GoodsController extends Controller
     {
         return [
             'upload' => [
-                'class' => UEditor::className(),
+                'class' => 'kucha\ueditor\UEditorAction',
                 'config' => [
                     "imageUrlPrefix"  => "http://admin.myshop.com",//图片访问路径前缀
                     "imagePathFormat" => "/images/image/{yyyy}{mm}{dd}/{time}{rand:6}", //上传保存路径

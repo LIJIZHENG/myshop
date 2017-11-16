@@ -113,22 +113,12 @@
 <!-- 底部版权 end -->
 <script type="text/javascript">
     $(function () {
-        //计算总金额
-        var total = 0;
-        $(".col5 span").each(function(){
-            total += parseFloat($(this).text());
-        });
-        $("#total").text(total.toFixed(2));
-        //改变数量保存到cookie
-        var changeNum = function () {
-
-        };
         //删除
         $('.del').click(function () {
             if (confirm('是否删除?')){
-                var id = $(this).attr('data-id');
+                var goods_id = $(this).closest('tr').attr('data-id');
                 var that = this;
-                $.post('delete',{'id':id},function (data) {
+                $.post('delete',{'goods_id':goods_id},function (data) {
                     if (data){
                         $(that).closest('tr').remove();
                         alert('删除成功');

@@ -69,16 +69,19 @@
 $this->registerJs(
         <<<JS
     $('.del').click(function() {
-      var id = $(this).attr('data-id');
-      var that = this;
-      $.post('delete',{'id':id},function(data) {
-        if (data == 1){
-            $(that).closest('tr').remove();
-            alert('删除成功');
-        }else{
-            alert('删除失败');
+        if (confirm('是否删除')){
+            var id = $(this).attr('data-id');
+            var that = this;
+            $.post('delete',{'id':id},function(data) {
+            if (data == 1){
+                $(that).closest('tr').remove();
+                alert('删除成功');
+            }else{
+                alert('删除失败');
+            }
+          })
         }
-      })
+     
     }); 
 JS
 
