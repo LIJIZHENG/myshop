@@ -310,10 +310,7 @@
                     <a href="javascript:;" id="forward" class="on"></a>
                     <div class="smallpic_wrap">
                         <ul>
-<!--                            <li class="cur">-->
-<!--                                <a class="zoomThumbActive" href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'images/preview_m1.jpg',largeimage: 'images/preview_l1.jpg'}">-->
-<!--                                    <img src="http://oywgoal5u.bkt.clouddn.com/--><?//=$goods->logo?><!--"></a>-->
-<!--                            </li>-->
+
                             <?php foreach ($goodsGallery as $k=>$gallery):?>
                             <li <?=$k==0?'class="cur"':''?>>
                                 <a href="javascript:void(0);" <?=$k==0?'class="zoomThumbActive"':''?> rel="{gallery: 'gal1', smallimage: 'http://oywgoal5u.bkt.clouddn.com/<?=$gallery->path?>',largeimage: 'http://oywgoal5u.bkt.clouddn.com/<?=$gallery->path?>'}">

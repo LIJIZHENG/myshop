@@ -17,7 +17,7 @@ class CartController extends Controller
 {
     public $enableCsrfValidation = false;
     public function actionIndex(){
-        if (\Yii::$app->user->isGuest){
+        if (!\Yii::$app->user->isGuest){
             $member_id = \Yii::$app->user->id;
             //判断cookie中是否有cart
             $cartCookie =Cart::getCart();
@@ -47,12 +47,10 @@ class CartController extends Controller
                 $cart = unserialize($cart);
                 if (isset($cart[$goods_id])){
                     $cart[$goods_id] += $amount;
-                    Cart::saveCart($cart);
                 }else{
                     $cart[$goods_id] = $amount;
-                    Cart::saveCart($cart);
                 }
-
+                Cart::saveCart($cart);
                 return $this->redirect(['index']);
             }else{
                 $cart = [$goods_id=>$amount];
