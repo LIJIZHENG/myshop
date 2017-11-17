@@ -20,8 +20,7 @@ class Cart extends ActiveRecord
     public function rules()
     {
         return [
-        [['goods_id','amount','member_id'],'required']
-        ];
+        [['goods_id','amount','member_id'],'required']];
     }
     public static function getAllGoods(){
         //查询购物车所有商品
@@ -64,7 +63,9 @@ class Cart extends ActiveRecord
         $cookies = new Cookie();
         $cookies->name = 'cart';
         $cookies->value = serialize($cart);
+        $cookies->expire = time()+30*24*3600;
         $cookie->add($cookies);
+
     }
     //已登录,保存cart到数据库
     public static function saveData($goods_id,$member_id,$amount){

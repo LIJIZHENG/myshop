@@ -64,8 +64,9 @@
         <div class="address">
             <h3>收货人信息</h3>
             <div class="address_info">
-                <?php foreach ()?>
-                <p><input type="radio" value="1" name="address_id"/>张三  17002810530  北京市 昌平区 一号楼大街 </p>
+                <?php foreach ($addresses as $address):?>
+                <p><input type="radio" value="<?=$address->id?>" name="address_id"/><?=$address->name.' '.$address->tel.' '.$address->province.$address->city.$address->area.$address->detail?></p>
+                <?php endforeach;?>
             </div>
         </div>
         <!-- 收货人信息  end-->
@@ -87,28 +88,28 @@
                     <tbody>
                     <tr class="cur">
                         <td>
-                            <input type="radio" name="delivery" checked="checked" />普通快递送货上门
+                            <input type="radio" name="delivery" checked="checked" value="普通快递送货上门" />普通快递送货上门
 
                         </td>
-                        <td>￥10.00</td>
+                        <td class="delivery_money" price="10">￥10.00</td>
                         <td>每张订单不满499.00元,运费15.00元, 订单4...</td>
                     </tr>
                     <tr>
 
-                        <td><input type="radio" name="delivery" />特快专递</td>
-                        <td>￥40.00</td>
+                        <td><input type="radio" name="delivery" value="特快专递" />特快专递</td>
+                        <td class="delivery_money" price="40">￥40.00</td>
                         <td>每张订单不满499.00元,运费40.00元, 订单4...</td>
                     </tr>
                     <tr>
 
-                        <td><input type="radio" name="delivery" />加急快递送货上门</td>
-                        <td>￥40.00</td>
+                        <td><input type="radio" name="delivery" value="加急快递送货上门" />加急快递送货上门</td>
+                        <td class="delivery_money" price="40">￥40.00</td>
                         <td>每张订单不满499.00元,运费40.00元, 订单4...</td>
                     </tr>
                     <tr>
 
-                        <td><input type="radio" name="delivery" />平邮</td>
-                        <td>￥10.00</td>
+                        <td><input type="radio" name="delivery" value="平邮"/>平邮</td>
+                        <td class="delivery_money" price="10">￥10.00</td>
                         <td>每张订单不满499.00元,运费15.00元, 订单4...</td>
                     </tr>
                     </tbody>
@@ -126,19 +127,19 @@
             <div class="pay_select">
                 <table>
                     <tr class="cur">
-                        <td class="col1"><input type="radio" name="pay" />货到付款</td>
+                        <td class="col1"><input type="radio" name="pay" value="货到付款" />货到付款</td>
                         <td class="col2">送货上门后再收款，支持现金、POS机刷卡、支票支付</td>
                     </tr>
                     <tr>
-                        <td class="col1"><input type="radio" name="pay" />在线支付</td>
+                        <td class="col1"><input type="radio" name="pay" value="在线支付" />在线支付</td>
                         <td class="col2">即时到帐，支持绝大数银行借记卡及部分银行信用卡</td>
                     </tr>
                     <tr>
-                        <td class="col1"><input type="radio" name="pay" />上门自提</td>
+                        <td class="col1"><input type="radio" name="pay" value="上门自提" />上门自提</td>
                         <td class="col2">自提时付款，支持现金、POS刷卡、支票支付</td>
                     </tr>
                     <tr>
-                        <td class="col1"><input type="radio" name="pay" />邮局汇款</td>
+                        <td class="col1"><input type="radio" name="pay" value="邮局汇款"/>邮局汇款</td>
                         <td class="col2">通过快钱平台收款 汇款后1-3个工作日到账</td>
                     </tr>
                 </table>
@@ -188,38 +189,28 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td class="col1"><a href=""><img src="/images/cart_goods1.jpg" alt="" /></a>  <strong><a href="">【1111购物狂欢节】惠JackJones杰克琼斯纯羊毛菱形格</a></strong></td>
-                    <td class="col3">￥499.00</td>
-                    <td class="col4"> 1</td>
-                    <td class="col5"><span>￥499.00</span></td>
-                </tr>
-                <tr>
-                    <td class="col1"><a href=""><img src="/images/cart_goods2.jpg" alt="" /></a> <strong><a href="">九牧王王正品新款时尚休闲中长款茄克EK01357200</a></strong></td>
-                    <td class="col3">￥1102.00</td>
-                    <td class="col4">1</td>
-                    <td class="col5"><span>￥1102.00</span></td>
-                </tr>
+                    <?php $cart = \frontend\models\Order::getCart(); echo $cart['html']?>
+
                 </tbody>
                 <tfoot>
                 <tr>
                     <td colspan="5">
                         <ul>
                             <li>
-                                <span>4 件商品，总商品金额：</span>
-                                <em>￥5316.00</em>
+                                <span><span id="count"></span><?=$cart['count']?>件商品，总商品金额：</span>
+                                <em id="total">￥<?=$cart['total']?></em>
                             </li>
                             <li>
                                 <span>返现：</span>
-                                <em>-￥240.00</em>
+                                <em>0</em>
                             </li>
                             <li>
                                 <span>运费：</span>
-                                <em>￥10.00</em>
+                                <em id="youfei"></em>
                             </li>
                             <li>
                                 <span>应付总额：</span>
-                                <em>￥5076.00</em>
+                                <em class="realtotal"></em>
                             </li>
                         </ul>
                     </td>
@@ -232,8 +223,8 @@
     </div>
 
     <div class="fillin_ft">
-        <a href=""><span>提交订单</span></a>
-        <p>应付总额：<strong>￥5076.00元</strong></p>
+        <a href="javascript:;" id="sub"><span>提交订单</span></a>
+        <p>应付总额：<strong class="realtotal"></strong></p>
 
     </div>
 </div>
@@ -266,5 +257,37 @@
     </p>
 </div>
 <!-- 底部版权 end -->
+<?php
+$success = \yii\helpers\Url::to(['order/order']);
+$fail = \yii\helpers\Url::to(['cart/index'])
+?>
+<script type="text/javascript">
+    $(function () {
+        var changepost = function () {
+            var delivery_price = $('.delivery_select input:checked').closest('tr').find('.delivery_money').attr('price');
+            $('#youfei').text('￥'+delivery_price);
+            var total = parseInt(<?=$cart['total']?>)+parseInt(delivery_price);
+            $('.realtotal').text('￥'+total)
+        };
+        changepost();
+        $('.delivery_select').change(changepost);
+
+        $('#sub').click(function () {
+            var address = $('.address_info input:checked').val();
+            var delivery = $('.delivery_select input:checked').val();
+            var delivery_price = $('.delivery_select input:checked').closest('tr').find('.delivery_money').attr('price');
+            var pay = $('.pay_select input:checked').val();
+            $.post('add',{'address_id':address,'delivery_name':delivery,'delivery_price':delivery_price,'payment_name':pay},function (data) {
+                if (data == 1){
+                    location.href = "<?=$success?>";
+                }else{
+                    alert(data);
+                    location.href = "<?=$fail?>";
+                }
+            })
+        });
+
+    })
+</script>
 </body>
 </html>
