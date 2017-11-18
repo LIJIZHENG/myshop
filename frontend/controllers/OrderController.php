@@ -29,6 +29,9 @@ class OrderController extends Controller
         return $this->render('list',['orders'=>$orders]);
     }
     public function actionAdd(){
+        if(\Yii::$app->user->isGuest){
+            return $this->redirect(['login/login']);
+        }
         $request = \Yii::$app->request;
         if ($request->isPost){
             $address_id = $request->post('address_id');
