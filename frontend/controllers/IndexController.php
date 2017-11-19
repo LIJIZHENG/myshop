@@ -20,7 +20,4 @@ class IndexController extends Controller
         $articleCat = ArticleCategory::find()->where(['status'=>1])->all();
         return $this->render('index',['articleCat'=>$articleCat]);
     }
-    public function actionBottom(){
-
-    }
 }

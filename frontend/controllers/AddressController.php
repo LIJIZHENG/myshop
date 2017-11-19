@@ -23,15 +23,22 @@ class AddressController extends Controller
     public function actionAdd(){
         $request = \Yii::$app->request;
         $data = $request->post();
+//        var_dump($data);die;
         $address = new Address();
         $address->load($data,'');
+        if (empty($address->status)){
+            $address->status = 0;
+        }
         if ($address->validate()){
             $address->member_id = \Yii::$app->user->identity->getId();
-            if ($address->status == 1){
+            if ($address->status == 1 ){
                 $defult = Address::findOne(['member_id'=>$address->member_id,'status'=>1]);
-                $defult->status = 0;
-                $defult->save();
+                if ($defult){
+                    $defult->status = 0;
+                    $defult->save();
+                }
             }
+
             $address->save();
             return $this->redirect(['index']);
         }else{
