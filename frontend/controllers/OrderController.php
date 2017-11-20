@@ -32,6 +32,15 @@ class OrderController extends Controller
         if(\Yii::$app->user->isGuest){
             return $this->redirect(['login/login']);
         }
+        //解决高并发下超卖的问题
+        //将商品库存保存在redis中
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $items = Goods::find()->select(['id','amount'])->all();
+        foreach ($items as $item){
+            $redis->set('goods_'.$item->id,$item->amount);
+        }
+
         $request = \Yii::$app->request;
         if ($request->isPost){
             $address_id = $request->post('address_id');
@@ -71,6 +80,7 @@ class OrderController extends Controller
                     $amount = $v->amount;
                     $goods = Goods::findOne(['id'=>$goods_id]);
                     //判断库存是否足够
+
                     if ($goods->stock < $amount){
                         throw new Exception($goods->name.'库存不足');
                     }
@@ -98,5 +108,13 @@ class OrderController extends Controller
         }
         $addresses = Address::find()->all();
         return $this->render('add',['addresses'=>$addresses]);
+    }
+    //超时未支付,取消订单
+    public function actionCancel(){
+        while(1){
+            Order::updateAll(['status'=>0],['status'=>1,['<','create_time',time()-24*3600]]);
+            sleep(1);
+            echo '1';
+        }
     }
 }

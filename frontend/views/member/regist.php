@@ -176,8 +176,10 @@
             var reg = /^1[34578]\d{9}$/;
             if (reg.test(phone)){
                 $.post('<?=\yii\helpers\Url::to(['send-sms'])?>',{'phone':phone},function (data) {
-                    if (!data){
+                    if (data==-1){
                         alert('发送失败');
+                    }else if(data == 0){
+                        alert('一分钟内只能发送一次短信');
                     }
                 })
             }else{

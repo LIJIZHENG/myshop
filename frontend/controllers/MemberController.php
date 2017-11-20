@@ -46,6 +46,14 @@ class MemberController extends Controller
     public function actionSendSms()
     {
         $phone = \Yii::$app->request->post('phone');
+        //短信防刷功能
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $rest = $redis->ttl('captcha_'.$phone);
+        if ($rest > 4*60){
+            return 0;
+        }
+
         $code = mt_rand(1000,9999);
         $response = Sms::sendSms(
             "麦mall", // 短信签名
@@ -55,13 +63,12 @@ class MemberController extends Controller
                 "code" => $code,
             )
         );
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1');
+
         $redis->set('captcha_'.$phone,$code,5*60);
         if ($response->Code == 'OK'){
-            return true;
+            return 1;
         }
-        return false;
+        return -1;
 //        echo "发送短信(sendSms)接口返回的结果:\n";
 //        print_r($response);
     }

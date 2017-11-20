@@ -18,6 +18,10 @@ class IndexController extends Controller
     public function actionIndex(){
         //查询底部文章分类
         $articleCat = ArticleCategory::find()->where(['status'=>1])->all();
-        return $this->render('index',['articleCat'=>$articleCat]);
+
+        $index = $this->render('index',['articleCat'=>$articleCat]);
+        file_put_contents('index.html',$index);
+        return $index;
     }
+
 }
